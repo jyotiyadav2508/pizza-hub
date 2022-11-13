@@ -3,9 +3,11 @@ Import gspread, to access and update data in our spreadsheet and
 import credentials class from google-auth to set up the authenication
 needed to access our Google Cloud Project.
 """
+import os
 import gspread
 from google.oauth2.service_account import Credentials
-import os
+from time import sleep
+from tabulate import tabulate
 
 
 SCOPE = [
@@ -19,9 +21,9 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('pizza_hub')
 
-menu = SHEET.worksheet('menu')
-order = SHEET.worksheet('order')
-receipt = SHEET.worksheet('receipt')
+MENU = SHEET.worksheet('menu')
+ORDER = SHEET.worksheet('order')
+RECEIPT = SHEET.worksheet('receipt')
 
 
 def clear_screen():
@@ -62,12 +64,16 @@ def get_user_details():
             print("Your selected delivery type is: Home delivery\n")
             address = input("Enter your Full Address: ")
             print(f"Your provided address: {address}")
-            # clear_screen()
+            print("Loading menu...")
+            sleep(5)
+            clear_screen()
             display_menu_list()
             break
         elif order_type == 'P' or order_type == 'p':
             print("Your selected delivery type is: Pickup")
-            # clear_screen()
+            print("Loading menu...")
+            sleep(5)
+            clear_screen()
             display_menu_list()
             break
         else:
@@ -76,9 +82,20 @@ def get_user_details():
 
 def display_menu_list():
     """
-    
+    Get data from google spreadsheet
     """
+    show_menu = MENU.get_all_values()
+    formatted_menu = (tabulate(show_menu))
+    print(formatted_menu)
+    print("\nEnter Item number to add item to order list.")
+    # print("Enter R to remove item from order list")
+    print("Enter P to preview your order")
+    print("Enter Q to quit\n")
 
+    user_choice = input("Enter your choice: ")
+    cell = MENU.find(user_choice)
+    added_item = MENU.get('B' + str(cell.row))
+    print(f"You added: {added_item[0][0]}")
 
-
+# display_menu_list()
 main()
