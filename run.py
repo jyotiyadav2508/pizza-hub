@@ -44,7 +44,7 @@ def welcome():
     while True:
         start_order = input("To order now, enter Y: ")
         print(start_order)
-        if start_order == 'y' or start_order == 'Y':
+        if start_order.capitalize() == 'Y':
             clear_screen()
             get_user_details()
             break
@@ -68,10 +68,10 @@ def get_user_details():
             clear_screen()
             display_menu_list()
             break
-        elif order_type == 'P' or order_type == 'p':
+        elif order_type.capitalize() == 'P':
             print("Your selected delivery type is: Pickup")
             print("Loading menu...")
-            sleep(5)
+            sleep(3)
             clear_screen()
             display_menu_list()
             break
@@ -97,40 +97,38 @@ def user_action():
     """
     Function to display user action after getting the menu
     """
-    # while True:
-    #     user_choice = input("Enter your choice: ")
-    #     if user_choice == 'q' or user_choice == 'Q':
-    #         print("Back to home page...")
-    #         sleep(2)
-    #         clear_screen()
-    #         welcome()
-    #         break 
-    #     elif user_choice == 'p' or user_choice == 'P':
-    #         print("Loading preview page....")
-    #         sleep(2)
-    #         clear_screen()
-    #         preview_order_list()
-    #         break
-        # else:
-        #     print("Invalid input")
-        
     while True:
         user_choice = input("Enter your choice: ")
-        if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
-            cell = MENU.find(user_choice)
-            added_item = MENU.get('B' + str(cell.row))
-            cost_item = MENU.get('C' + str(cell.row))
-            print(f"\nYou added: {added_item[0][0]}, price:{cost_item[0][0]}\n")
-            print("Which other item would you like to add in your order?\n")
+        if user_choice.isdigit() == True:
+            if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
+                cell = MENU.find(user_choice)
+                added_item = MENU.get('B' + str(cell.row))
+                cost_item = MENU.get('C' + str(cell.row))
+                print(f"\nYou added: {added_item[0][0]}, price:{cost_item[0][0]}\n")
+                print("Which other item would you like to add in your order?\n")
+            else:
+                print("invalid input.")
+        elif user_choice.capitalize() == 'P':
+            print("Loading preview page....")
+            sleep(2)
+            clear_screen()
+            preview_order_list()
+            break
+        elif user_choice.capitalize() == 'Q':
+            print("Back to home page...")
+            sleep(2)
+            clear_screen()
+            welcome()
             break
         else:
-            print("Invalid input. Try again.")
+            print("Invalid input.\n")
 
 
 def preview_order_list():
     """
     Function to display formatted order list of user's selected item
     """
+
 
 
 user_action()
