@@ -4,11 +4,10 @@ import credentials class from google-auth to set up the authenication
 needed to access our Google Cloud Project.
 """
 import os
+from time import sleep
 import gspread
 from google.oauth2.service_account import Credentials
-from time import sleep
 from tabulate import tabulate
-
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -24,24 +23,24 @@ SHEET = GSPREAD_CLIENT.open('pizza_hub')
 MENU = SHEET.worksheet('menu')
 ORDER = SHEET.worksheet('order')
 RECEIPT = SHEET.worksheet('receipt')
+MAX_MENU_ITEM = 15
 
 
 def clear_screen():
     """
-    Clear screen
+    Function to clear screen
     """
-    if (os.name == 'posix'):
+    if os.name == 'posix':
         os.system('clear')
     else:
-        os.system('cls')    
+        os.system('cls')
 
 
-def main():
+def welcome():
     """
-    Home page
+    Function to display home page
     """
     print("Welcome to Pizza Hub!\n")
-    
     while True:
         start_order = input("To order now, enter Y: ")
         print(start_order)
@@ -51,11 +50,11 @@ def main():
             break
         else:
             print("Invalid input. Enter Y to order.\n")
-    
+
 
 def get_user_details():
     """
-    user details
+    Function to get user name and their type of order
     """
     input("Enter your name: ")
     while True:
@@ -78,11 +77,12 @@ def get_user_details():
             break
         else:
             print("Invalid delivery type. Try again.")
-    
+
 
 def display_menu_list():
     """
-    Get data from google spreadsheet
+    Function to fetch data from google spreadsheet and display it
+    in formatted tabulate form to user
     """
     show_menu = MENU.get_all_values()
     formatted_menu = (tabulate(show_menu))
@@ -91,11 +91,45 @@ def display_menu_list():
     # print("Enter R to remove item from order list")
     print("Enter P to preview your order")
     print("Enter Q to quit\n")
+    # user_choice = input("Enter your choice: \n")
+    # cell = MENU.find(user_choice)
+    # added_item = MENU.get('B' + str(cell.row))
+    # print(f"You added: {added_item[0][0]}\n")
+    user_action()
 
-    user_choice = input("Enter your choice: ")
-    cell = MENU.find(user_choice)
-    added_item = MENU.get('B' + str(cell.row))
-    print(f"You added: {added_item[0][0]}")
 
-# display_menu_list()
-main()
+def user_action():
+    """
+    Function to display user action after getting the menu
+    """
+    while True:
+        user_choice = input("Enter your choice: \n")
+        if user_choice >= 1 and user_choice <= MAX_MENU_ITEM:
+            cell = MENU.find(user_choice)
+            added_item = MENU.get('B' + str(cell.row))
+            print(f"You added: {added_item[0][0]}\n")
+            break
+        elif user_choice == 'p' or user_choice == 'P':
+            print("Loading preview page....")
+            sleep(5)
+            clear_screen()
+            preview_order_list()
+            break
+        elif user_choice == 'q' or user_choice == 'Q':
+            print("Back to home page...")
+            sleep(3)
+            clear_screen()
+            welcome()
+            break
+        else:
+            print("Invalid input. Try again.")
+
+
+def preview_order_list():
+    """
+    Function to display formatted order list of user's selected item
+    """
+
+
+# user_action()
+welcome()
