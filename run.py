@@ -88,13 +88,8 @@ def display_menu_list():
     formatted_menu = (tabulate(show_menu))
     print(formatted_menu)
     print("\nEnter Item number to add item to order list.")
-    # print("Enter R to remove item from order list")
     print("Enter P to preview your order")
     print("Enter Q to quit\n")
-    # user_choice = input("Enter your choice: \n")
-    # cell = MENU.find(user_choice)
-    # added_item = MENU.get('B' + str(cell.row))
-    # print(f"You added: {added_item[0][0]}\n")
     user_action()
 
 
@@ -102,24 +97,31 @@ def user_action():
     """
     Function to display user action after getting the menu
     """
+    # while True:
+    #     user_choice = input("Enter your choice: ")
+    #     if user_choice == 'q' or user_choice == 'Q':
+    #         print("Back to home page...")
+    #         sleep(2)
+    #         clear_screen()
+    #         welcome()
+    #         break 
+    #     elif user_choice == 'p' or user_choice == 'P':
+    #         print("Loading preview page....")
+    #         sleep(2)
+    #         clear_screen()
+    #         preview_order_list()
+    #         break
+        # else:
+        #     print("Invalid input")
+        
     while True:
-        user_choice = input("Enter your choice: \n")
-        if user_choice >= 1 and user_choice <= MAX_MENU_ITEM:
+        user_choice = input("Enter your choice: ")
+        if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
             cell = MENU.find(user_choice)
             added_item = MENU.get('B' + str(cell.row))
-            print(f"You added: {added_item[0][0]}\n")
-            break
-        elif user_choice == 'p' or user_choice == 'P':
-            print("Loading preview page....")
-            sleep(5)
-            clear_screen()
-            preview_order_list()
-            break
-        elif user_choice == 'q' or user_choice == 'Q':
-            print("Back to home page...")
-            sleep(3)
-            clear_screen()
-            welcome()
+            cost_item = MENU.get('C' + str(cell.row))
+            print(f"\nYou added: {added_item[0][0]}, price:{cost_item[0][0]}\n")
+            print("Which other item would you like to add in your order?\n")
             break
         else:
             print("Invalid input. Try again.")
@@ -131,5 +133,5 @@ def preview_order_list():
     """
 
 
-# user_action()
-welcome()
+user_action()
+# welcome()
