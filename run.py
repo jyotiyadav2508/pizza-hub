@@ -8,22 +8,23 @@ from time import sleep
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
+
 # from order import *
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
-    "https://www.googleapis.com/auth/drive"
-    ]
+    "https://www.googleapis.com/auth/drive",
+]
 
-CREDS = Credentials.from_service_account_file('creds.json')
+CREDS = Credentials.from_service_account_file("creds.json")
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-SHEET = GSPREAD_CLIENT.open('pizza_hub')
+SHEET = GSPREAD_CLIENT.open("pizza_hub")
 
-MENU = SHEET.worksheet('menu')
-ORDER_LIST = SHEET.worksheet('order_list')
-RECEIPT = SHEET.worksheet('receipt')
+MENU = SHEET.worksheet("menu")
+ORDER_LIST = SHEET.worksheet("order_list")
+RECEIPT = SHEET.worksheet("receipt")
 MAX_MENU_ITEM = 15
 
 
@@ -31,10 +32,10 @@ def clear_screen():
     """
     Function to clear screen
     """
-    if os.name == 'posix':
-        os.system('clear')
+    if os.name == "posix":
+        os.system("clear")
     else:
-        os.system('cls')
+        os.system("cls")
 
 
 def welcome():
@@ -45,7 +46,7 @@ def welcome():
     while True:
         start_order = input("To order now, enter Y: ")
         print(start_order)
-        if start_order.capitalize() == 'Y':
+        if start_order.capitalize() == "Y":
             clear_screen()
             get_user_details()
             break
@@ -60,8 +61,10 @@ def get_user_details():
     user_name = input("Enter your name: ")
     print(f"Welcome {user_name}!\n")
     while True:
-        delivery_type = input("Order type:\nEnter D for Home delivery\nEnter P for Pickup: ")
-        if delivery_type.capitalize() == 'D':
+        delivery_type = input(
+            "Order type:\nEnter D for Home delivery\nEnter P for Pickup: "
+        )
+        if delivery_type.capitalize() == "D":
             order_type = "Home delivery"
             print(f"Your selected delivery type is: {order_type}\n")
             address = input("Enter your Full Address: ")
@@ -71,7 +74,7 @@ def get_user_details():
             clear_screen()
             display_menu_list()
             break
-        elif delivery_type.capitalize() == 'P':
+        elif delivery_type.capitalize() == "P":
             order_type = "Pickup"
             print(f"Your selected delivery type is: {order_type}")
             print("Loading menu...")
@@ -89,7 +92,7 @@ def display_menu_list():
     in formatted tabulate form to user
     """
     display_menu = MENU.get_all_values()
-    formatted_menu = (tabulate(display_menu))
+    formatted_menu = tabulate(display_menu)
     print(formatted_menu)
     print("\nEnter Item number to add item to order list.")
     print("Enter P to preview your order")
@@ -107,15 +110,15 @@ def user_action():
             if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
                 cell = MENU.find(user_choice)
                 item_num = user_choice
-                item_name = MENU.get('B' + str(cell.row))
-                price = MENU.get('C' + str(cell.row))
+                item_name = MENU.get("B" + str(cell.row))
+                price = MENU.get("C" + str(cell.row))
                 print(
                     f"\nYou added item {item_num}, {item_name[0][0]}, price:{price[0][0]}\n"
-                    )
+                )
                 print("Which other item would you like to add in your order?\n")
             else:
                 print("\nInvalid input. Try again")
-        elif user_choice.capitalize() == 'P':
+        elif user_choice.capitalize() == "P":
             print("Loading preview page....")
             sleep(2)
             clear_screen()
@@ -127,7 +130,7 @@ def user_action():
             # order_list = tabulate([item_num, item_name[0][0], price[0][0]])
             # print(order_list)
             break
-        elif user_choice.capitalize() == 'Q':
+        elif user_choice.capitalize() == "Q":
             print("Back to home page...")
             sleep(2)
             clear_screen()
@@ -147,7 +150,10 @@ class UserOrder:
     """
     Class that creates user order instance
     """
-    def __init__(self, user_name, item_num, item_name, price, order_type, address):
+
+    def __init__(
+        self, user_name, item_num, item_name, price, order_type, address
+    ):
         # instance attribute
         self.user_name = user_name
         self.item_num = item_num
@@ -160,11 +166,17 @@ class UserOrder:
         """
         Function to update user data in order worksheet
         """
-        order_data = [self.user_name, self.item_num, self.item_name,
-                    self.price, self.order_type, self.address]
-        update_worksheet = SHEET.worksheet('order')
+        order_data = [
+            self.user_name,
+            self.item_num,
+            self.item_name,
+            self.price,
+            self.order_type,
+            self.address,
+        ]
+        update_worksheet = SHEET.worksheet("order")
         update_worksheet.append_row(order_data)
-        formatted_order_data = (tabulate(update_worksheet))
+        formatted_order_data = tabulate(update_worksheet)
         print(formatted_order_data)
 
 
