@@ -8,6 +8,7 @@ from time import sleep
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
+# from order import *
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -21,11 +22,9 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('pizza_hub')
 
 MENU = SHEET.worksheet('menu')
-ORDER = SHEET.worksheet('order')
+ORDER_LIST = SHEET.worksheet('order_list')
 RECEIPT = SHEET.worksheet('receipt')
 MAX_MENU_ITEM = 15
-
-
 
 
 def clear_screen():
@@ -53,14 +52,6 @@ def welcome():
         else:
             print("Invalid input. Enter Y to order.\n")
 
-def __init__(self, user_name, item_num, item_name, price, order_type, address):
-    #instance attribute
-    self.user_name = user_name
-    self.item_num = item_num
-    self.item_name = item_name
-    self.price = price
-    self.order_type = order_type
-    self.address = address
 
 def get_user_details():
     """
@@ -69,14 +60,14 @@ def get_user_details():
     user_name = input("Enter your name: ")
     print(f"Welcome {user_name}!\n")
     while True:
-        delivery_type = input("Order type:\n For Home delivery, enter D and For Pickup, enter P: ")
+        delivery_type = input("Order type:\nEnter D for Home delivery\nEnter P for Pickup: ")
         if delivery_type.capitalize() == 'D':
             order_type = "Home delivery"
             print(f"Your selected delivery type is: {order_type}\n")
             address = input("Enter your Full Address: ")
             print(f"Your provided address: {address}")
             print("Loading menu...")
-            sleep(5)
+            sleep(3)
             clear_screen()
             display_menu_list()
             break
@@ -97,8 +88,8 @@ def display_menu_list():
     Function to fetch data from google spreadsheet and display it
     in formatted tabulate form to user
     """
-    show_menu = MENU.get_all_values()
-    formatted_menu = (tabulate(show_menu))
+    display_menu = MENU.get_all_values()
+    formatted_menu = (tabulate(display_menu))
     print(formatted_menu)
     print("\nEnter Item number to add item to order list.")
     print("Enter P to preview your order")
@@ -118,7 +109,9 @@ def user_action():
                 item_num = user_choice
                 item_name = MENU.get('B' + str(cell.row))
                 price = MENU.get('C' + str(cell.row))
-                print(f"\nYou added item {item_num}, {item_name[0][0]}, price:{price[0][0]}\n")
+                print(
+                    f"\nYou added item {item_num}, {item_name[0][0]}, price:{price[0][0]}\n"
+                    )
                 print("Which other item would you like to add in your order?\n")
             else:
                 print("\nInvalid input. Try again")
@@ -126,11 +119,13 @@ def user_action():
             print("Loading preview page....")
             sleep(2)
             clear_screen()
-            preview_order_list()
-            # self.append_order_data()
+            append_order_list()
+            # preview_order_list()
+            # self.append_order_list()
             # ORDER.append_row([user_name, item_num, item_name, price, order_type, address])
-            print([item_num, item_name[0][0], price[0][0]])
-            ORDER.append_row([item_num, item_name[0][0], price[0][0]])
+            # ORDER.append_row([item_num, item_name[0][0], price[0][0]])
+            # order_list = tabulate([item_num, item_name[0][0], price[0][0]])
+            # print(order_list)
             break
         elif user_choice.capitalize() == 'Q':
             print("Back to home page...")
@@ -142,33 +137,35 @@ def user_action():
             print("Invalid input.\n")
 
 
-
 def preview_order_list():
     """
     Function to display formatted order list of user's selected item
     """
 
 
-# class UserOrder:
-#     """
-#     Class that creates user order instance
-#     """
-#     def __init__(self, user_name, item_num, item_name, price, order_type, address):
-#         #instance attribute
-#         self.user_name = user_name
-#         self.item_num = item_num
-#         self.item_name = item_name
-#         self.price = price
-#         self.order_type = order_type
-#         self.address = address
+class UserOrder:
+    """
+    Class that creates user order instance
+    """
+    def __init__(self, user_name, item_num, item_name, price, order_type, address):
+        # instance attribute
+        self.user_name = user_name
+        self.item_num = item_num
+        self.item_name = item_name
+        self.price = price
+        self.order_type = order_type
+        self.address = address
+
+    def append_order_list(self):
+        """
+        Function to update user data in order worksheet
+        """
+        order_data = [self.user_name, self.item_num, self.item_name,
+                    self.price, self.order_type, self.address]
+        update_worksheet = SHEET.worksheet('order')
+        update_worksheet.append_row(order_data)
+        formatted_order_data = (tabulate(update_worksheet))
+        print(formatted_order_data)
 
 
-    # def append_order_data(self):
-    #     """
-        
-    #     """
-    #     order_data = [self.user_name, self.item_num, self.item_name, self.price, self.order_type, self.address]
-    #     update_worksheet = SHEET.worksheet('order').append_row(order_data)
-
-# preview_order_list()
 welcome()
