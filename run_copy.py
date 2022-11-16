@@ -144,7 +144,7 @@ class UserOrder:
         self.address = None
 
         self.items = list()
-        
+         
         # self.item_num = None
         # self.item_name = None
         # self.price = None

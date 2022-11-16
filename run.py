@@ -78,7 +78,7 @@ def get_user_details():
             order.order_type = "Pickup"
             print(f"Your selected delivery type is: {order.order_type}")
             print("Loading menu...")
-            sleep(3)
+            sleep(2)
             clear_screen()
             display_menu_list()
             break
