@@ -221,16 +221,16 @@ def welcome():
     """
     Function to display home page
     """
-    # print("Welcome to Pizza Hub!\n")
-    # while True:
-    #     start_order = input("To order now, enter Y: ")
-    #     print(start_order)
-    #     if start_order.capitalize() == 'Y':
-    #         clear_screen()
-    #         get_user_details()
-    #         break
-    #     else:
-    #         print("Invalid input. Enter Y to order.\n")
+    print("Welcome to Pizza Hub!\n")
+    while True:
+        start_order = input("To order now, enter Y: ")
+        print(start_order)
+        if start_order.capitalize() == 'Y':
+            clear_screen()
+            get_user_details()
+            break
+        else:
+            print("Invalid input. Enter Y to order.\n")
 
     # Workflow
 
