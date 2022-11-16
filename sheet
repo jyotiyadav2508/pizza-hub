@@ -7,3 +7,13 @@ Order Id    User Name   Address     Delivery Type   Item No
 User Info
 Name        Address     
 Sandeep     Delhi
+
+
+
+ # cell = MENU.find(user_choice)
+                # item_num = user_choice
+                # item_name = MENU.get("B" + str(cell.row))
+                # price = MENU.get("C" + str(cell.row))
+                # print(
+                #     f"\nYou added item {item_num}, {item_name[0][0]}, price:{price[0][0]}\n"
+                # )

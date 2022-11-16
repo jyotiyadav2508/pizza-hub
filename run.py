@@ -113,29 +113,20 @@ def user_action():
                 order_items = UserOrder()
                 order_items.add_item(item_number)
                 print(order_items.items)
-                # order_items.items(item_number)
-                # cell = MENU.find(user_choice)
-                # item_num = user_choice
-                # item_name = MENU.get("B" + str(cell.row))
-                # price = MENU.get("C" + str(cell.row))
-                # print(
-                #     f"\nYou added item {item_num}, {item_name[0][0]}, price:{price[0][0]}\n"
-                # )
                 print("Which other item would you like to add in your order?\n")
             else:
                 print("\nInvalid input. Try again")
-        # elif user_choice.capitalize() == "P":
-        #     print("Loading preview page....")
-        #     sleep(2)
-        #     clear_screen()
-        #     # append_order_list()
-        #     break
-        # elif user_choice.capitalize() == "Q":
-        #     print("Back to home page...")
-        #     sleep(2)
-        #     clear_screen()
-        #     welcome()
-        #     break
+        elif user_choice.capitalize() == "P":
+            print("Loading preview page....")
+            sleep(2)
+            clear_screen()
+            break
+        elif user_choice.capitalize() == "Q":
+            print("Back to home page...")
+            sleep(2)
+            clear_screen()
+            welcome()
+            break
         else:
             print("Invalid input.\n")
 
@@ -151,24 +142,24 @@ class UserOrder:
         self.order_type = None
         self.address = None
         self.items = list()
-    
+        # self.items = []
+
     @classmethod
     def new(cls, user_name):
         new_order = cls()
         new_order.user_name = user_name
         return new_order
-    
+
     @classmethod
     def existing(cls, order_id):
         existing_order = cls()
         existing_order.id = order_id
         self._fetch_order()
         return existing_order
-    
+
     def add_item(self, item_number):
         self.items.append(item_number)
-        print(self.items)
-    
+
     def complete(self):
         if self.id:
             return
@@ -177,10 +168,10 @@ class UserOrder:
         rows = []
         for item in items:
             row.append([self.id, self.user_name, self.address, self.order_type, item])
-    
+
     # def _fetch_order(self):
     #     # Go to sheet
-    
+
     # def preview_order(self):
     #     order_template = """
     #     Order ID: %s
@@ -207,6 +198,5 @@ class UserOrder:
     #     print(order_receipt)
 
 
-    
 if __name__ == "__main__":
     welcome()

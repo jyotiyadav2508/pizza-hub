@@ -178,7 +178,6 @@ class UserOrder:
     def _fetch_order(self):
         # Go to sheet
 
-        
     def preview_order(self):
         order_template = """
         Order ID: %s
