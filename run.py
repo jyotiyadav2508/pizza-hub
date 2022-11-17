@@ -165,9 +165,15 @@ class UserOrder:
         return existing_order
 
     def add_item(self, item_number):
+        """
+        Function that add item number in items list
+        """
         self.items.append(item_number)
 
     def complete(self):
+        """
+        Function that generates id
+        """
         if self.id:
             return
 
@@ -178,7 +184,7 @@ class UserOrder:
         for item in self.items:
             rows.append([self.id, self.user_name, self.address, self.order_type, item])
             print(rows)
-            ORDER_LIST.append_row(rows[0])
+        ORDER_LIST.append_row(rows[0])
         print(rows)
 
     # def _fetch_order(self):
@@ -197,15 +203,14 @@ class UserOrder:
     #     %s  %s
     #     """
     #     order_receipt = order_template % (self.id, self.user_name, self.order_type, self.address)
-        
     #     total_price = 0
     #     for item in self.items:
     #         item_details = MENU.get(item)
     #         item_price = item_details[2]
     #         total_price += item_price
     #         order_receipt+=item_teplate % (item_details[1], item_details[2])
-    
-    #     order_receipt += "Total price: %s" % total_price
+
+        order_receipt += "Total price: %s" % total_price
 
     #     print(order_receipt)
 

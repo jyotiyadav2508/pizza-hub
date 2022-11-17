@@ -27,108 +27,7 @@ RECEIPT = SHEET.worksheet('receipt')
 MAX_MENU_ITEM = 15
 
 
-def clear_screen():
-    """
-    Function to clear screen
-    """
-    if os.name == 'posix':
-        os.system('clear')
-    else:
-        os.system('cls')
 
-
-
-
-
-def get_user_details():
-    """
-    Function to get user name and their type of order
-    """
-    user_name = input("Enter your name: ")
-    print(f"Welcome {user_name}!\n")
-    while True:
-        delivery_type = input("Order type:\nEnter D for Home delivery\nEnter P for Pickup: ")
-        if delivery_type.capitalize() == 'D':
-            order_type = "Home delivery"
-            print(f"Your selected delivery type is: {order_type}\n")
-            address = input("Enter your Full Address: ")
-            print(f"Your provided address: {address}")
-            print("Loading menu...")
-            sleep(3)
-            clear_screen()
-            display_menu_list()
-            break
-        elif delivery_type.capitalize() == 'P':
-            order_type = "Pickup"
-            print(f"Your selected delivery type is: {order_type}")
-            print("Loading menu...")
-            sleep(3)
-            clear_screen()
-            display_menu_list()
-            break
-        else:
-            print("Invalid delivery type. Try again.")
-
-
-def display_menu_list():
-    """
-    Function to fetch data from google spreadsheet and display it
-    in formatted tabulate form to user
-    """
-    display_menu = MENU.get_all_values()
-    formatted_menu = (tabulate(display_menu))
-    print(formatted_menu)
-    print("\nEnter Item number to add item to order list.")
-    print("Enter P to preview your order")
-    print("Enter Q to quit\n")
-    user_action()
-
-
-def user_action():
-    """
-    Function to display user action after getting the menu
-    """
-    while True:
-        user_choice = input("Enter your choice: ")
-        if user_choice.isdigit() is True:
-            if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
-                cell = MENU.find(user_choice)
-                item_num = user_choice
-                item_name = MENU.get('B' + str(cell.row))
-                price = MENU.get('C' + str(cell.row))
-                print(
-                    f"\nYou added item {item_num}, {item_name[0][0]}, price:{price[0][0]}\n"
-                    )
-                append_order_list((item_num, item_name, price))
-                print("Which other item would you like to add in your order?\n")
-            else:
-                print("\nInvalid input. Try again")
-        elif user_choice.capitalize() == 'P':
-            print("Loading preview page....")
-            sleep(2)
-            clear_screen()
-            
-            # preview_order_list()
-            # self.append_order_list()
-            # ORDER.append_row([user_name, item_num, item_name, price, order_type, address])
-            # ORDER.append_row([item_num, item_name[0][0], price[0][0]])
-            # order_list = tabulate([item_num, item_name[0][0], price[0][0]])
-            # print(order_list)
-            break
-        elif user_choice.capitalize() == 'Q':
-            print("Back to home page...")
-            sleep(2)
-            clear_screen()
-            welcome()
-            break
-        else:
-            print("Invalid input.\n")
-
-
-def preview_order_list():
-    """
-    Function to display formatted order list of user's selected item
-    """
 
 
 class UserOrder:
@@ -178,7 +77,11 @@ class UserOrder:
     def _fetch_order(self):
         # Go to sheet
 
+
     def preview_order(self):
+        """
+        Function to preview user order
+        """
         order_template = """
         Order ID: %s
         User Name: %s
