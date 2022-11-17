@@ -5,9 +5,11 @@ needed to access our Google Cloud Project.
 """
 import os
 from time import sleep
+import uuid
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
+
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -57,7 +59,10 @@ def get_user_details():
     Function to get user name and their type of order
     """
     user_name = input("Enter your name: ")
-    order = UserOrder.new(user_name)
+    order_new = UserOrder.new(user_name)
+    order_class = UserOrder()
+    order_class.user_name = user_name
+    # print(order_class.user_name)
     print(f"Welcome {user_name}!\n")
     while True:
         delivery_type = input(
@@ -65,9 +70,10 @@ def get_user_details():
         )
         if delivery_type.capitalize() == "D":
             # order_type = "Home delivery"
-            order.order_type = "Home delivery"
+            order_class.order_type = "Home delivery"
+            # .order_type = "Home delivery"
             print(f"Your selected delivery type is: {order.order_type}\n")
-            order.address = input("Enter your Full Address: ")
+            order_class.address = input("Enter your Full Address: ")
             print(f"Your provided address: {order.address}")
             print("Loading menu...")
             sleep(1)
@@ -75,8 +81,8 @@ def get_user_details():
             display_menu_list()
             break
         elif delivery_type.capitalize() == "P":
-            order.order_type = "Pickup"
-            print(f"Your selected delivery type is: {order.order_type}")
+            order_class.order_type = "Pickup"
+            print(f"Your selected delivery type is: {order_class.order_type}")
             print("Loading menu...")
             sleep(2)
             clear_screen()
@@ -104,14 +110,14 @@ def user_action():
     """
     Function to display user action after getting the menu
     """
-    # order = UserOrder.add_item()
+    order_items = UserOrder()
     while True:
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit() is True:
             if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
                 item_number = int(user_choice)
-                order_items = UserOrder()
                 order_items.add_item(item_number)
+                order_items.complete()
                 print(order_items.items)
                 print("Which other item would you like to add in your order?\n")
             else:
@@ -141,11 +147,12 @@ class UserOrder:
         self.id = None
         self.order_type = None
         self.address = None
-        self.items = list()
-        # self.items = []
+        # self.items = list()
+        self.items = []
 
     @classmethod
     def new(cls, user_name):
+        # cls.user_name = user_name
         new_order = cls()
         new_order.user_name = user_name
         return new_order
@@ -164,10 +171,15 @@ class UserOrder:
         if self.id:
             return
 
-        self.id = uuid()
+        # self.id = uuid.uuid1()
+        self.id=1
+        print(self.id)
         rows = []
-        for item in items:
-            row.append([self.id, self.user_name, self.address, self.order_type, item])
+        for item in self.items:
+            rows.append([self.id, self.user_name, self.address, self.order_type, item])
+            print(rows)
+            ORDER_LIST.append_row(rows[0])
+        print(rows)
 
     # def _fetch_order(self):
     #     # Go to sheet
@@ -200,3 +212,4 @@ class UserOrder:
 
 if __name__ == "__main__":
     welcome()
+    # display_menu_list()
