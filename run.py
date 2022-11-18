@@ -121,7 +121,7 @@ def user_action():
                 print(order_items.items)
                 print("Which other item would you like to add in your order?\n")
             else:
-                print("\nInvalid input. Try again")
+                print("\nEntered item does not exists in menu. Try again")
         elif user_choice.capitalize() == "P":
             print("Loading preview page....")
             sleep(2)
