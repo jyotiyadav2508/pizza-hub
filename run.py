@@ -51,7 +51,7 @@ def welcome():
             get_user_details()
             break
         else:
-            print("Invalid input. Enter Y to order.\n")
+            print("Invalid input. Enter Y to start your order.\n")
 
 
 def get_user_details():
@@ -210,7 +210,7 @@ class UserOrder:
     #         total_price += item_price
     #         order_receipt+=item_teplate % (item_details[1], item_details[2])
 
-        order_receipt += "Total price: %s" % total_price
+        # order_receipt += "Total price: %s" % total_price
 
     #     print(order_receipt)
 

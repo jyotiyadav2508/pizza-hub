@@ -135,13 +135,14 @@ def user_action():
                 print("\nInvalid input. Try again")
         elif user_choice.capitalize() == "P":
             print("Loading preview page....")
-            sleep(2)
+            sleep(1)
             clear_screen()
             # process_order(str(item_number))
+            preview_order()
             break
         elif user_choice.capitalize() == "Q":
             print("Back to home page...")
-            sleep(2)
+            sleep(1)
             clear_screen()
             welcome()
             break
@@ -153,9 +154,57 @@ def add_item(item_number):
     # order_data.append(item_number)
     cell = MENU.find(str(item_number))
     order_row = MENU.row_values(cell.row)
-    row = order_row + user_data
+    row = order_row
     print(row)
     ORDER_LIST.append_row(row)
+
+
+def preview_order():
+    user_order = ORDER_LIST.get_all_values()
+    print("------Order Preview------\n\n")
+    formatted_preview = tabulate(user_order)
+    print(formatted_preview)
+    print("\nTo remove an item, enter Item number\n")
+    print("To add an item, enter A\n")
+    print("To confirm order, enter C\n")
+    print("To quit, enter Q\n")
+    while True:
+        preview_choice = input("Enter your choice: ")
+        if preview_choice.isdigit() is True:
+            if (int(preview_choice) >= 1 and int(preview_choice) <= MAX_MENU_ITEM):
+                cell = ORDER_LIST.find(preview_choice)
+                print(cell)
+                if cell is not None:
+                    ORDER_LIST.batch_clear(["A" + str(cell.row) + ":" + "C" + str(cell.row)])
+                else:
+                    print("Item does not exist in the list")
+            else:
+                print("Invalid input")
+        elif preview_choice.capitalize() == 'A':
+            print("Loading menu page....")
+            sleep(1)
+            clear_screen()
+            display_menu_list()
+            break
+        elif preview_choice.capitalize() == 'C':
+            print("Loading reciept....")
+            sleep(1)
+            clear_screen()
+            display_order_receipt()
+            break
+        elif preview_choice.capitalize() == 'Q':
+            print("Loading home page....")
+            sleep(1)
+            clear_screen()
+            welcome()
+            break
+        else:
+            print("Invalid input")
+
+    
+# def display_order_receipt()
+
+
 
 
 # class UserOrder:
