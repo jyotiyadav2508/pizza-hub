@@ -5,7 +5,7 @@ needed to access our Google Cloud Project.
 """
 import os
 from time import sleep
-import uuid
+# import uuid
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
@@ -175,7 +175,12 @@ def preview_order():
                 cell = ORDER_LIST.find(preview_choice)
                 print(cell)
                 if cell is not None:
-                    ORDER_LIST.batch_clear(["A" + str(cell.row) + ":" + "C" + str(cell.row)])
+                    # ORDER_LIST.batch_clear(["A" + str(cell.row) + ":" + "C" + str(cell.row)])
+                    ORDER_LIST.delete_rows(cell.row)
+                    print("Requested item removed!")
+                    sleep(1)
+                    clear_screen()
+                    preview_order()
                 else:
                     print("Item does not exist in the list")
             else:
@@ -201,8 +206,37 @@ def preview_order():
         else:
             print("Invalid input")
 
+
+def display_order_receipt():
+    """
+    Receipt
+    """
+    print(f"User name: {user_data[0]}")
+    print(f"Order type: {user_data[1]}")
+    if user_data[1] == "Home delivery":
+        print(f"Address: {user_data[2]}")
+    else:
+        print("Address: The Pizza Hub")
+    receipt = ORDER_LIST.get_all_values()
+    price = ORDER_LIST.col_values(3)
+    price.remove("Cost")
+    price.remove("------------")
+    total_price = 0
+    for item in price:
+        price = float(item.split("€")[1])
+        total_price += price
+        display_total_price = "€" + str(round(total_price, 2))
+        # df["Cost"] = df["Cost"].str[1:].astype(float)
     
-# def display_order_receipt()
+    # formatted_receipt = tabulate(receipt)
+    # print(formatted_receipt)
+    print(tabulate(receipt, tablefmt="simple", numalign="center"))
+    print(f"\nTotal price of your order: {display_total_price}\n")
+    user_input = input("To quit, enter Q: ")
+    if user_input.capitalize() == 'Q':
+        clear_screen()
+        welcome()
+    
 
 
 
