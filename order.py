@@ -9,6 +9,7 @@ from time import sleep
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
+from termcolor import colored
 
 
 SCOPE = [
@@ -24,7 +25,7 @@ SHEET = GSPREAD_CLIENT.open("pizza_hub")
 
 MENU = SHEET.worksheet("menu")
 ORDER_LIST = SHEET.worksheet("order_list")
-RECEIPT = SHEET.worksheet("receipt")
+RECEIPT_LIST = SHEET.worksheet("receipt")
 MAX_MENU_ITEM = 15
 
 user_data = []
@@ -45,9 +46,13 @@ def welcome():
     """
     Function to display home page
     """
-    print("Welcome to Pizza Hub!\n")
+    # words = "Welcome to Pizza Hub!\n"
+    # for char in words:
+    #     sleep(0.1)
+    #     print(char, end='', flush=True)
+    print(colored("Welcome to Pizza Hub!\n", 'green'))
     while True:
-        start_order = input("To order now, enter Y: ")
+        start_order = input("\nTo order now, enter Y: ")
         print(start_order)
         if start_order.capitalize() == "Y":
             clear_screen()
@@ -61,21 +66,22 @@ def get_user_details():
     """
     Function to get user name and their type of order
     """
+    user_data.clear()
     user_name = input("Enter your name: ")
-    # order_new = UserOrder(user_name)
-    # print(order_class.user_name)
     user_data.append(user_name)
     print(f"Welcome {user_name}!\n")
+    # order_id = ORDER_ID
+    # order_id += 1
+    # print(order_id)
+    # user_data.append(order_id)
     print(user_data)
     while True:
         delivery_type = input(
             "Order type:\nEnter D for Home delivery\nEnter P for Pickup: "
         )
         if delivery_type.capitalize() == "D":
-            # order_type = "Home delivery"
             order_type = "Home delivery"
             user_data.append(order_type)
-            # .order_type = "Home delivery"
             print(f"Your selected delivery type is: {order_type}\n")
             address = input("Enter your Full Address: ")
             print(f"Your provided address: {address}")
@@ -118,11 +124,17 @@ def user_action():
     """
     Function to display user action after getting the menu
     """
+    order_data.clear()
+    heading = MENU.get('A1:D2')
+    print(heading)
+    ORDER_LIST.append_row(heading[0])
+    ORDER_LIST.append_row(heading[1])
     while True:
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit() is True:
             if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
                 item_number = int(user_choice)
+
                 add_item(item_number)
                 print(order_data)
                 print("Which other item would you like to add in your order?\n")
@@ -148,7 +160,6 @@ def add_item(item_number):
     """
     Function to append user's order list on order list sheet
     """
-    # order_data.append(item_number)
     cell = MENU.find(str(item_number))
     order_row = MENU.row_values(cell.row)
     row = order_row
@@ -199,6 +210,7 @@ def preview_order():
             break
         elif preview_choice.capitalize() == 'Q':
             print("Loading home page....")
+            ORDER_LIST.clear()
             sleep(1)
             clear_screen()
             welcome()
@@ -212,6 +224,7 @@ def display_order_receipt():
     Functon to display receipt with user datails and order list
     """
     print(f"User name: {user_data[0]}")
+    # print(f"Order Id: {user_data[1]}")
     print(f"Order type: {user_data[1]}")
     if user_data[1] == "Home delivery":
         print(f"Address: {user_data[2]}")
@@ -220,7 +233,7 @@ def display_order_receipt():
     receipt = ORDER_LIST.get_all_values()
     price = ORDER_LIST.col_values(3)
     price.remove("Cost")
-    price.remove("------------")
+    price.remove("--------------------")
     total_price = 0
     for item in price:
         price = float(item.split("€")[1])
@@ -228,8 +241,10 @@ def display_order_receipt():
         display_total_price = "€" + str(round(total_price, 2))
     print(tabulate(receipt, tablefmt="simple", numalign="center"))
     print(f"\nTotal price of your order: {display_total_price}\n")
+    ORDER_LIST.clear()
     user_input = input("To quit, enter Q: ")
     if user_input.capitalize() == 'Q':
+        ORDER_LIST.clear()
         clear_screen()
         welcome()
 

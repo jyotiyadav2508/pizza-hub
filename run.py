@@ -9,6 +9,8 @@ import uuid
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
+from termcolor import colored
+import pyfiglet
 
 
 SCOPE = [
@@ -27,6 +29,9 @@ ORDER_LIST = SHEET.worksheet("order_list")
 RECEIPT = SHEET.worksheet("receipt")
 MAX_MENU_ITEM = 15
 
+user_data = []
+order_data = []
+
 
 def clear_screen():
     """
@@ -38,22 +43,6 @@ def clear_screen():
         os.system("cls")
 
 
-def welcome():
-    """
-    Function to display home page
-    """
-    print("Welcome to Pizza Hub!\n")
-    while True:
-        start_order = input("To order now, enter Y: ")
-        print(start_order)
-        if start_order.capitalize() == "Y":
-            clear_screen()
-            get_user_details()
-            break
-        else:
-            print("Invalid input. Enter Y to start your order.\n")
-
-
 def get_user_details():
     """
     Function to get user name and their type of order
@@ -63,33 +52,34 @@ def get_user_details():
     order_class = UserOrder()
     order_class.user_name = user_name
     # print(order_class.user_name)
-    print(f"Welcome {user_name}!\n")
+    print(colored(f"\nWelcome {user_name}!\n", 'yellow'))
     while True:
         delivery_type = input(
-            "Order type:\nEnter D for Home delivery\nEnter P for Pickup: "
+            "Order type:\nEnter D for Home delivery\nEnter P for Pickup: \n"
         )
         if delivery_type.capitalize() == "D":
             # order_type = "Home delivery"
             order_class.order_type = "Home delivery"
-            # .order_type = "Home delivery"
-            print(f"Your selected delivery type is: {order.order_type}\n")
+            print(colored(
+                f"Your selected delivery type is: {order.order_type}\n", 'yellow'))
             order_class.address = input("Enter your Full Address: ")
-            print(f"Your provided address: {order.address}")
-            print("Loading menu...")
-            sleep(1)
+            print(colored(f"Your provided address: {order.address}", 'yellow'))
+            print(colored("Loading menu...", 'green'))
+            sleep(2)
             clear_screen()
             display_menu_list()
             break
         elif delivery_type.capitalize() == "P":
             order_class.order_type = "Pickup"
-            print(f"Your selected delivery type is: {order_class.order_type}")
-            print("Loading menu...")
+            print(colored(
+                f"Your selected delivery type is: {order_class.order_type}", 'yellow'))
+            print(colored("\nLoading menu...", 'green'))
             sleep(2)
             clear_screen()
             display_menu_list()
             break
         else:
-            print("Invalid delivery type. Try again.")
+            print(colored("\nInvalid delivery type. Try again.\n", 'red'))
 
 
 def display_menu_list():
@@ -121,44 +111,57 @@ def user_action():
                 print(order_items.items)
                 print("Which other item would you like to add in your order?\n")
             else:
-                print("\nEntered item does not exists in menu. Try again")
+                print(colored("\nEntered item does not exists.", 'red'))
         elif user_choice.capitalize() == "P":
-            print("Loading preview page....")
+            print(colored("Loading preview page....", 'green'))
             sleep(2)
             clear_screen()
             break
         elif user_choice.capitalize() == "Q":
-            print("Back to home page...")
+            print(colored("Back to home page...", 'green'))
             sleep(2)
             clear_screen()
             welcome()
             break
         else:
-            print("Invalid input.\n")
+            print(colored("Invalid input.\n", 'red'))
 
 
 class UserOrder:
     """
     Class that creates the user order instance
     """
-    def __init__(self):
+    def __init__(self, user_name, order_type, address, user_id, food_item):
+        """
+        Class to create user instance
+        """
         # instance attribute
-        self.user_name = None
-        self.id = None
-        self.order_type = None
-        self.address = None
-        # self.items = list()
-        self.items = []
+        # self.user_name = None
+        # self.id = None
+        # self.order_type = None
+        # self.address = None
+        # # self.items = list()
+        # self.items = []
+        self.user_name = user_name
+        self.order_type = order_type
+        self.address = address
+        self.user_id = user_id
+        self.food_item = food_item
 
     @classmethod
     def new(cls, user_name):
-        # cls.user_name = user_name
+        """
+        Class method for new user
+        """
         new_order = cls()
         new_order.user_name = user_name
         return new_order
 
     @classmethod
     def existing(cls, order_id):
+        """
+        Class method for exixting user
+        """
         existing_order = cls()
         existing_order.id = order_id
         self._fetch_order()
@@ -166,23 +169,23 @@ class UserOrder:
 
     def add_item(self, item_number):
         """
-        Function that add item number in items list
+        Function that add user's selected item in the list food_item 
         """
-        self.items.append(item_number)
+        self.food_item.append(item_number)
 
     def complete(self):
         """
         Function that generates id
         """
-        if self.id:
+        if self.user_id:
             return
 
-        # self.id = uuid.uuid1()
-        self.id=1
-        print(self.id)
+        self.user_id = uuid.uuid1()
+        # save info to worksheet
+        print(self.user_id)
         rows = []
-        for item in self.items:
-            rows.append([self.id, self.user_name, self.address, self.order_type, item])
+        for item in self.food_item:
+            rows.append([self.id, self.user_name, self.address, self.order_type, food_item])
             print(rows)
         ORDER_LIST.append_row(rows[0])
         print(rows)
@@ -215,6 +218,21 @@ class UserOrder:
     #     print(order_receipt)
 
 
+def welcome():
+    """
+    Function to display home page
+    """
+    print(colored("Welcome to Pizza Hub!\n", 'green'))
+    while True:
+        start_order = input("To order now, enter Y: ")
+        print(start_order)
+        if start_order.capitalize() == "Y":
+            clear_screen()
+            get_user_details()
+            break
+        else:
+            print(colored("Invalid input. Enter Y to start your order.\n", 'red'))
+
+
 if __name__ == "__main__":
     welcome()
-    # display_menu_list()
