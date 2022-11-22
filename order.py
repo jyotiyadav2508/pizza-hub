@@ -6,7 +6,7 @@ needed to access our Google Cloud Project.
 import os
 from time import sleep
 from datetime import datetime, timedelta
-import uuid
+# import uuid
 import random
 import gspread
 from google.oauth2.service_account import Credentials
@@ -52,7 +52,7 @@ def welcome():
     # for char in words:
     #     sleep(0.1)
     #     print(char, end='', flush=True)
-    print(colored("Welcome to Pizza Hub!\n", 'green'))
+    print(colored("Welcome to Pizza Hub!\n", 'yellow'))
     while True:
         start_order = input("\nTo order now, enter Y: ")
         print(start_order)
@@ -61,7 +61,7 @@ def welcome():
             get_user_details()
             break
         else:
-            print("Invalid input. Enter Y to order.\n")
+            print(colored("Invalid input. Enter Y to order.\n", 'red'))
 
 
 def get_user_details():
@@ -71,12 +71,11 @@ def get_user_details():
     user_data.clear()
     user_name = input("Enter your name: ")
     # order_id = uuid.uuid1()
-    # order_id_int = int(order_id)
-    # print(order_id, order_id_int)
+    # print(order_id)
     user_order_id = random.getrandbits(16)
     user_data.append(user_name)
     user_data.append(user_order_id)
-    print(f"Welcome {user_name}!\n")
+    print(colored(f"\nWelcome {user_name}!\n", 'cyan'))
     while True:
         delivery_type = input(
             "Order type:\nEnter D for Home delivery\nEnter P for Pickup: "
@@ -84,27 +83,29 @@ def get_user_details():
         if delivery_type.capitalize() == "D":
             order_type = "Home delivery"
             user_data.append(order_type)
-            print(f"Your selected delivery type is: {order_type}\n")
+            print(colored(
+                f"\nYour selected delivery type is: {order_type}\n", 'cyan'))
             address = input("Enter your Full Address: ")
-            print(f"Your provided address: {address}")
+            print(colored(f"\nYour provided address: {address}\n", 'cyan'))
             user_data.append(address)
-            print("Loading menu...")
-            sleep(1)
+            print(colored("\nLoading menu...", 'green'))
+            sleep(2)
             clear_screen()
             display_menu_list()
             break
         elif delivery_type.capitalize() == "P":
             order_type = "Pickup"
             user_data.append(order_type)
-            print(f"Your selected delivery type is: {order_type}")
+            print(colored(
+                f"\nYour selected delivery type is: {order_type}", 'cyan'))
             user_data.append("The Pizza Hub")
-            print("Loading menu...")
+            print(colored("\nLoading menu...", 'green'))
             sleep(2)
             clear_screen()
             display_menu_list()
             break
         else:
-            print("Invalid delivery type. Try again.")
+            print(colored("\nInvalid delivery type. Try again.\n", 'red'))
 
 
 def display_menu_list():
@@ -126,33 +127,31 @@ def user_action():
     Function to display user action after getting the menu
     """
     order_data.clear()
-    # heading = MENU.get('A1:D2')
-    # print(heading)
-    # ORDER_LIST.append_row(heading[0])
-    # ORDER_LIST.append_row(heading[1])
     while True:
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit() is True:
             if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
                 item_number = int(user_choice)
                 add_item(item_number)
-                print("Which other item would you like to add in your order?\n")
+                print(colored(
+                    '\nWhich other item would you like to add'
+                    ' in your order?\n', 'yellow'))
             else:
-                print("\nInvalid input. Try again")
+                print(colored("\nInvalid input. Try again\n", 'red'))
         elif user_choice.capitalize() == "P":
-            print("Loading preview page....")
-            sleep(1)
+            print(colored("\nLoading preview page....", 'green'))
+            sleep(2)
             clear_screen()
             preview_order()
             break
         elif user_choice.capitalize() == "Q":
-            print("Back to home page...")
+            print(colored("\nBack to home page...", 'green'))
             sleep(1)
             clear_screen()
             welcome()
             break
         else:
-            print("Invalid input.\n")
+            print(colored("\nInvalid input.\n", 'red'))
 
 
 def add_item(item_number):
@@ -170,10 +169,11 @@ def preview_order():
     Function to preview the user's order
     """
     user_order = ORDER_LIST.get_all_values()
-    print("------Order Preview------\n")
-    formatted_preview = tabulate(user_order, headers=["Item", "Name", "Price"], tablefmt="simple", numalign="center")
+    print(colored("------Order Preview------\n", 'cyan'))
+    formatted_preview = tabulate(user_order, headers=[
+        "Item", "Name", "Price"], tablefmt="simple", numalign="center")
     print(formatted_preview)
-    print("\nTo remove an item, enter Item number\n")
+    print("\n\nTo remove an item, enter Item number\n")
     print("To add an item, enter A\n")
     print("To confirm order, enter C\n")
     print("To quit, enter Q\n")
@@ -183,47 +183,46 @@ def preview_order():
             if (int(preview_choice) >= 1 and int(preview_choice) <= MAX_MENU_ITEM):
                 cell = ORDER_LIST.find(preview_choice)
                 if cell is not None:
-                    # ORDER_LIST.batch_clear(["A" + str(cell.row) + ":" + "C" + str(cell.row)])
                     ORDER_LIST.delete_rows(cell.row)
-                    print("Requested item removed!")
+                    print(colored("\nRequested item removed!", 'green'))
                     sleep(2)
                     clear_screen()
                     preview_order()
                 else:
-                    print("Item does not exist in the list")
+                    print(colored("\nItem does not exist in the list", 'red'))
             else:
-                print("Invalid input")
+                print(colored("\nInvalid input\n", 'red'))
         elif preview_choice.capitalize() == 'A':
-            print("Loading menu page....")
+            print(colored("\nLoading menu page....", 'green'))
             sleep(1)
             clear_screen()
             display_menu_list()
             break
         elif preview_choice.capitalize() == 'C':
-            print("Loading reciept....")
+            print(colored("\nLoading reciept....", 'green'))
             sleep(1)
             clear_screen()
             display_order_receipt()
             break
         elif preview_choice.capitalize() == 'Q':
-            print("Loading home page....")
+            print(colored("\nLoading home page....", 'green'))
             ORDER_LIST.clear()
             sleep(1)
             clear_screen()
             welcome()
             break
         else:
-            print("Invalid input")
+            print(colored("\nInvalid input\n", 'red'))
 
 
 def display_order_receipt():
     """
     Functon to display receipt with user datails and order list
     """
-    print(f"User name: {user_data[0]}")
-    print(f"Order Id: {user_data[1]}")
-    print(f"Order type: {user_data[2]}")
-    print(f"Address: {user_data[3]}")
+    print(colored(f"User name: {user_data[0]}", 'magenta'))
+    print(colored(f"Order Id: {user_data[1]}", 'magenta'))
+    print(colored(f"Order type: {user_data[2]}", 'magenta'))
+    print(colored(f"Address: {user_data[3]}", 'magenta'))
     order_time = datetime.now() + timedelta(hours=1)
     delivery_time = order_time + timedelta(minutes=30)
     pickup_time = order_time + timedelta(minutes=15)
@@ -231,11 +230,11 @@ def display_order_receipt():
     delivery_time = delivery_time.strftime("%d-%m-%Y  %H:%M:%S")
     pickup_time = pickup_time.strftime("%d-%m-%Y  %H:%M:%S")
 
-    print(f"Order time: {order_time}")
+    print(colored(f"Order time: {order_time}", 'magenta'))
     if user_data[1] == "Home delivery":
-        print(f"Delivery time: {delivery_time}\n")
+        print(colored(f"Delivery time: {delivery_time}\n", 'magenta'))
     else:
-        print(f"Pickup time: {pickup_time}\n")
+        print(colored(f"Pickup time: {pickup_time}\n", 'magenta'))
     receipt = ORDER_LIST.get_all_values()
     price = ORDER_LIST.col_values(3)
     total_price = 0
@@ -243,15 +242,15 @@ def display_order_receipt():
         price = float(item.split("€")[1])
         total_price += price
         display_total_price = "€" + str(round(total_price, 2))
-    print(tabulate(receipt, headers=["Item", "Name", "Price"], tablefmt="simple", numalign="center"))
-    print(f"\nTotal price of your order: {display_total_price}\n")
+    print(tabulate(receipt, headers=[
+        "Item", "Name", "Price"], tablefmt="simple", numalign="center"))
+    print(colored(
+        f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
     # receipt_data = []
     # receipt_data.append(user_data)
     # receipt_data.append(receipt)
     # print(receipt)
     # print(receipt_data)
-    # temporary = []
-    # RECEIPT_LIST.append_row(["User name", "Order Id", "Order type", "Address", "Item number", "Item name", "Price"])
     i = 0
     while i < len(receipt):
         for item in receipt:
@@ -259,12 +258,9 @@ def display_order_receipt():
             # user_data.append(item)
             # print(user_data)
             receipt_data = user_data + item
-            # print(temporary)
             RECEIPT_LIST.append_row(receipt_data)
             i += 1
-    
     ORDER_LIST.clear()
-
     user_input = input("To quit, enter Q: ")
     if user_input.capitalize() == 'Q':
         ORDER_LIST.clear()
