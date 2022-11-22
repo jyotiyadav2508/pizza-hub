@@ -5,7 +5,9 @@ needed to access our Google Cloud Project.
 """
 import os
 from time import sleep
-# import uuid
+from datetime import datetime, timedelta
+import uuid
+import random
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
@@ -68,13 +70,13 @@ def get_user_details():
     """
     user_data.clear()
     user_name = input("Enter your name: ")
+    # order_id = uuid.uuid1()
+    # order_id_int = int(order_id)
+    # print(order_id, order_id_int)
+    user_order_id = random.getrandbits(16)
     user_data.append(user_name)
+    user_data.append(user_order_id)
     print(f"Welcome {user_name}!\n")
-    # order_id = ORDER_ID
-    # order_id += 1
-    # print(order_id)
-    # user_data.append(order_id)
-    print(user_data)
     while True:
         delivery_type = input(
             "Order type:\nEnter D for Home delivery\nEnter P for Pickup: "
@@ -86,7 +88,6 @@ def get_user_details():
             address = input("Enter your Full Address: ")
             print(f"Your provided address: {address}")
             user_data.append(address)
-            print(user_data)
             print("Loading menu...")
             sleep(1)
             clear_screen()
@@ -95,8 +96,8 @@ def get_user_details():
         elif delivery_type.capitalize() == "P":
             order_type = "Pickup"
             user_data.append(order_type)
-            print(user_data)
             print(f"Your selected delivery type is: {order_type}")
+            user_data.append("The Pizza Hub")
             print("Loading menu...")
             sleep(2)
             clear_screen()
@@ -125,18 +126,16 @@ def user_action():
     Function to display user action after getting the menu
     """
     order_data.clear()
-    heading = MENU.get('A1:D2')
-    print(heading)
-    ORDER_LIST.append_row(heading[0])
-    ORDER_LIST.append_row(heading[1])
+    # heading = MENU.get('A1:D2')
+    # print(heading)
+    # ORDER_LIST.append_row(heading[0])
+    # ORDER_LIST.append_row(heading[1])
     while True:
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit() is True:
             if (int(user_choice) >= 1) and (int(user_choice) <= MAX_MENU_ITEM):
                 item_number = int(user_choice)
-
                 add_item(item_number)
-                print(order_data)
                 print("Which other item would you like to add in your order?\n")
             else:
                 print("\nInvalid input. Try again")
@@ -163,7 +162,6 @@ def add_item(item_number):
     cell = MENU.find(str(item_number))
     order_row = MENU.row_values(cell.row)
     row = order_row
-    print(row)
     ORDER_LIST.append_row(row)
 
 
@@ -173,7 +171,7 @@ def preview_order():
     """
     user_order = ORDER_LIST.get_all_values()
     print("------Order Preview------\n")
-    formatted_preview = tabulate(user_order)
+    formatted_preview = tabulate(user_order, headers=["Item", "Name", "Price"], tablefmt="simple", numalign="center")
     print(formatted_preview)
     print("\nTo remove an item, enter Item number\n")
     print("To add an item, enter A\n")
@@ -184,12 +182,11 @@ def preview_order():
         if preview_choice.isdigit() is True:
             if (int(preview_choice) >= 1 and int(preview_choice) <= MAX_MENU_ITEM):
                 cell = ORDER_LIST.find(preview_choice)
-                print(cell)
                 if cell is not None:
                     # ORDER_LIST.batch_clear(["A" + str(cell.row) + ":" + "C" + str(cell.row)])
                     ORDER_LIST.delete_rows(cell.row)
                     print("Requested item removed!")
-                    sleep(1)
+                    sleep(2)
                     clear_screen()
                     preview_order()
                 else:
@@ -224,24 +221,50 @@ def display_order_receipt():
     Functon to display receipt with user datails and order list
     """
     print(f"User name: {user_data[0]}")
-    # print(f"Order Id: {user_data[1]}")
-    print(f"Order type: {user_data[1]}")
+    print(f"Order Id: {user_data[1]}")
+    print(f"Order type: {user_data[2]}")
+    print(f"Address: {user_data[3]}")
+    order_time = datetime.now() + timedelta(hours=1)
+    delivery_time = order_time + timedelta(minutes=30)
+    pickup_time = order_time + timedelta(minutes=15)
+    order_time = order_time.strftime("%d-%m-%Y  %H:%M:%S")
+    delivery_time = delivery_time.strftime("%d-%m-%Y  %H:%M:%S")
+    pickup_time = pickup_time.strftime("%d-%m-%Y  %H:%M:%S")
+
+    print(f"Order time: {order_time}")
     if user_data[1] == "Home delivery":
-        print(f"Address: {user_data[2]}")
+        print(f"Delivery time: {delivery_time}\n")
     else:
-        print("Address: The Pizza Hub")
+        print(f"Pickup time: {pickup_time}\n")
     receipt = ORDER_LIST.get_all_values()
     price = ORDER_LIST.col_values(3)
-    price.remove("Cost")
-    price.remove("--------------------")
     total_price = 0
     for item in price:
         price = float(item.split("€")[1])
         total_price += price
         display_total_price = "€" + str(round(total_price, 2))
-    print(tabulate(receipt, tablefmt="simple", numalign="center"))
+    print(tabulate(receipt, headers=["Item", "Name", "Price"], tablefmt="simple", numalign="center"))
     print(f"\nTotal price of your order: {display_total_price}\n")
+    # receipt_data = []
+    # receipt_data.append(user_data)
+    # receipt_data.append(receipt)
+    # print(receipt)
+    # print(receipt_data)
+    # temporary = []
+    # RECEIPT_LIST.append_row(["User name", "Order Id", "Order type", "Address", "Item number", "Item name", "Price"])
+    i = 0
+    while i < len(receipt):
+        for item in receipt:
+            receipt_data = []
+            # user_data.append(item)
+            # print(user_data)
+            receipt_data = user_data + item
+            # print(temporary)
+            RECEIPT_LIST.append_row(receipt_data)
+            i += 1
+    
     ORDER_LIST.clear()
+
     user_input = input("To quit, enter Q: ")
     if user_input.capitalize() == 'Q':
         ORDER_LIST.clear()
