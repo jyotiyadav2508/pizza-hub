@@ -118,7 +118,6 @@ def user_action():
     """
     Function to display user action after getting the menu
     """
-    
     while True:
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit() is True:
@@ -126,10 +125,6 @@ def user_action():
                 item_number = int(user_choice)
                 add_item(item_number)
                 print(order_data)
-                # order.add_item(item_number)
-                # order_items.complete()
-                # user_data.append(order_items.items)
-                # print(order_items.items)
                 print("Which other item would you like to add in your order?\n")
             else:
                 print("\nInvalid input. Try again")
@@ -137,7 +132,6 @@ def user_action():
             print("Loading preview page....")
             sleep(1)
             clear_screen()
-            # process_order(str(item_number))
             preview_order()
             break
         elif user_choice.capitalize() == "Q":
@@ -148,9 +142,12 @@ def user_action():
             break
         else:
             print("Invalid input.\n")
-        
+
 
 def add_item(item_number):
+    """
+    Function to append user's order list on order list sheet
+    """
     # order_data.append(item_number)
     cell = MENU.find(str(item_number))
     order_row = MENU.row_values(cell.row)
@@ -160,8 +157,11 @@ def add_item(item_number):
 
 
 def preview_order():
+    """
+    Function to preview the user's order
+    """
     user_order = ORDER_LIST.get_all_values()
-    print("------Order Preview------\n\n")
+    print("------Order Preview------\n")
     formatted_preview = tabulate(user_order)
     print(formatted_preview)
     print("\nTo remove an item, enter Item number\n")
@@ -209,7 +209,7 @@ def preview_order():
 
 def display_order_receipt():
     """
-    Receipt
+    Functon to display receipt with user datails and order list
     """
     print(f"User name: {user_data[0]}")
     print(f"Order type: {user_data[1]}")
@@ -226,104 +226,13 @@ def display_order_receipt():
         price = float(item.split("€")[1])
         total_price += price
         display_total_price = "€" + str(round(total_price, 2))
-        # df["Cost"] = df["Cost"].str[1:].astype(float)
-    
-    # formatted_receipt = tabulate(receipt)
-    # print(formatted_receipt)
     print(tabulate(receipt, tablefmt="simple", numalign="center"))
     print(f"\nTotal price of your order: {display_total_price}\n")
     user_input = input("To quit, enter Q: ")
     if user_input.capitalize() == 'Q':
         clear_screen()
         welcome()
-    
-
-
-
-
-# class UserOrder:
-#     """
-#     Class that creates the user order instance
-#     """
-#     def __init__(self):
-#         # instance attribute
-#         self.items = []
-#         # self.order_num = order_num
-#         self.id = id
-#         # self.items = []
-
-#     @classmethod
-#     def new(cls, user_name):
-#         """
-#         Define class method for new user
-#         """
-#         # cls.user_name = user_name
-#         new_order = cls()
-#         new_order.user_name = user_name
-#         return new_order
-
-#     @classmethod
-#     def existing(cls, id):
-#         """
-#         Define class method for existing user
-#         """
-#         existing_order = cls()
-#         existing_order.id = id
-#         self._fetch_order()
-#         return existing_order
-
-#     def add_item(self):
-#         """
-#         Function append items number in items list
-#         """
-#         self.items.append(item_number)
-
-#     def complete(self):
-#         """
-#         Function that generate random order number
-#         """
-#         if self.id:
-#             return
-
-        # self.id = uuid.uuid1()
-        # self.id = 1
-        # print(self.id)
-        # rows = []
-        # for item in self.items:
-        #     rows.append([self.user_name, self.order_type, self.address, item, self.id])
-        #     print(rows)
-        # ORDER_LIST.append_row(rows[0])
-        # print(rows)
-
-    # def _fetch_order(self):
-    #     # Go to sheet
-
-    # def preview_order(self):
-    #     order_template = """
-    #     Order ID: %s
-    #     User Name: %s
-    #     Order Type: %s
-    #     Address: %s
-    #     ----------------------------------------------
-    #     Item Name   Item Price
-    #     """
-    #     item_teplate = """
-    #     %s  %s
-    #     """
-    #     order_receipt = order_template % (self.id, self.user_name, self.order_type, self.address)
-        
-    #     total_price = 0
-    #     for item in self.items:
-    #         item_details = MENU.get(item)
-    #         item_price = item_details[2]
-    #         total_price += item_price
-    #         order_receipt+=item_teplate % (item_details[1], item_details[2])
-    
-    #     order_receipt += "Total price: %s" % total_price
-
-    #     print(order_receipt)
 
 
 if __name__ == "__main__":
     welcome()
-    # display_menu_list()
