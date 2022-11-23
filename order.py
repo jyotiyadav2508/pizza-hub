@@ -27,7 +27,7 @@ SHEET = GSPREAD_CLIENT.open("pizza_hub")
 
 MENU = SHEET.worksheet("menu")
 ORDER_LIST = SHEET.worksheet("order_list")
-RECEIPT_LIST = SHEET.worksheet("receipt")
+RECEIPT_LIST = SHEET.worksheet("receipt_lists")
 MAX_MENU_ITEM = 15
 
 user_data = []
@@ -54,14 +54,15 @@ def welcome():
     #     print(char, end='', flush=True)
     print(colored("Welcome to Pizza Hub!\n", 'yellow'))
     while True:
-        start_order = input("\nTo order now, enter Y: ")
+        start_order = input("\nTo order now, Please enter Y: ")
         print(start_order)
         if start_order.capitalize() == "Y":
             clear_screen()
             get_user_details()
             break
         else:
-            print(colored("Invalid input. Enter Y to order.\n", 'red'))
+            print(colored(
+                "Invalid input. Enter Y to start your order.\n", 'red'))
 
 
 def get_user_details():
@@ -219,10 +220,11 @@ def display_order_receipt():
     """
     Functon to display receipt with user datails and order list
     """
-    print(colored(f"User name: {user_data[0]}", 'magenta'))
-    print(colored(f"Order Id: {user_data[1]}", 'magenta'))
-    print(colored(f"Order type: {user_data[2]}", 'magenta'))
-    print(colored(f"Address: {user_data[3]}", 'magenta'))
+    print(colored("****Your Reciept****\n", 'yellow'))
+    print(f"User name: {user_data[0]}")
+    print(f"Order Id: {user_data[1]}")
+    print(f"Order type: {user_data[2]}")
+    print(f"Address: {user_data[3]}")
     order_time = datetime.now() + timedelta(hours=1)
     delivery_time = order_time + timedelta(minutes=30)
     pickup_time = order_time + timedelta(minutes=15)
@@ -230,22 +232,31 @@ def display_order_receipt():
     delivery_time = delivery_time.strftime("%d-%m-%Y  %H:%M:%S")
     pickup_time = pickup_time.strftime("%d-%m-%Y  %H:%M:%S")
 
-    print(colored(f"Order time: {order_time}", 'magenta'))
-    if user_data[1] == "Home delivery":
-        print(colored(f"Delivery time: {delivery_time}\n", 'magenta'))
+    print(f"Order time: {order_time}")
+    if user_data[2] == "Home delivery":
+        print(f"Delivery time: {delivery_time}\n")
     else:
-        print(colored(f"Pickup time: {pickup_time}\n", 'magenta'))
+        print(f"Pickup time: {pickup_time}\n")
     receipt = ORDER_LIST.get_all_values()
     price = ORDER_LIST.col_values(3)
     total_price = 0
+    # delivery_charge = 5
     for item in price:
         price = float(item.split("€")[1])
         total_price += price
         display_total_price = "€" + str(round(total_price, 2))
     print(tabulate(receipt, headers=[
         "Item", "Name", "Price"], tablefmt="simple", numalign="center"))
+    # if user_data[2] == "Home delivery":
+    #     print(colored(
+    #         f'\nThere is a delivey charge of €{float(delivery_charge):.2f}'))
+    #     display_total_price = display_total_price + str(round(delivery_charge, 2))
+    #     print(colored(
+    #         f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
+    # else:
     print(colored(
-        f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
+            f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
+    print(colored("Thanks for your order. Enjoy your meal!\n", 'yellow'))
     # receipt_data = []
     # receipt_data.append(user_data)
     # receipt_data.append(receipt)

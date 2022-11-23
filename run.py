@@ -6,6 +6,7 @@ needed to access our Google Cloud Project.
 import os
 from time import sleep
 import uuid
+import random
 import gspread
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
@@ -26,7 +27,7 @@ SHEET = GSPREAD_CLIENT.open("pizza_hub")
 
 MENU = SHEET.worksheet("menu")
 ORDER_LIST = SHEET.worksheet("order_list")
-RECEIPT = SHEET.worksheet("receipt")
+RECEIPT_LIST = SHEET.worksheet("receipt_lists")
 MAX_MENU_ITEM = 15
 
 user_data = []
@@ -45,34 +46,36 @@ def clear_screen():
 
 def get_user_details():
     """
-    Function to get user name and their type of order
+    Function to get user details for required data
     """
+    ORDER_LIST.clear()
+    user = UserOrder()
     user_name = input("Enter your name: ")
-    order_new = UserOrder.new(user_name)
-    order_class = UserOrder()
-    order_class.user_name = user_name
-    # print(order_class.user_name)
-    print(colored(f"\nWelcome {user_name}!\n", 'yellow'))
+    # order_id = uuid.uuid1()
+    # print(order_id)
+    user_order_id = random.getrandbits(16)
+    print(user_order_id)
+    print(colored(f"\nWelcome {user_name}!\n", 'cyan'))
     while True:
         delivery_type = input(
-            "Order type:\nEnter D for Home delivery\nEnter P for Pickup: \n"
+            "Order type:\nEnter D for Home delivery\nEnter P for Pickup: "
         )
         if delivery_type.capitalize() == "D":
-            # order_type = "Home delivery"
-            order_class.order_type = "Home delivery"
+            order_type = "Home delivery"
             print(colored(
-                f"Your selected delivery type is: {order.order_type}\n", 'yellow'))
-            order_class.address = input("Enter your Full Address: ")
-            print(colored(f"Your provided address: {order.address}", 'yellow'))
-            print(colored("Loading menu...", 'green'))
+                f"\nYour selected delivery type is: {order_type}\n", 'cyan'))
+            address = input("Enter your Full Address: ")
+            print(colored(f"\nYour provided address: {address}\n", 'cyan'))
+            print(colored("\nLoading menu...", 'green'))
             sleep(2)
             clear_screen()
             display_menu_list()
             break
         elif delivery_type.capitalize() == "P":
-            order_class.order_type = "Pickup"
+            order_type = "Pickup"
             print(colored(
-                f"Your selected delivery type is: {order_class.order_type}", 'yellow'))
+                f"\nYour selected delivery type is: {order_type}", 'cyan'))
+            user_data.append("The Pizza Hub")
             print(colored("\nLoading menu...", 'green'))
             sleep(2)
             clear_screen()
@@ -100,7 +103,7 @@ def user_action():
     """
     Function to display user action after getting the menu
     """
-    order_items = UserOrder()
+    order_item = UserOrder.add_item(self, item_number)
     while True:
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit() is True:
@@ -141,12 +144,12 @@ class UserOrder:
         # self.order_type = None
         # self.address = None
         # # self.items = list()
-        # self.items = []
+        self.food_items = []
         self.user_name = user_name
         self.order_type = order_type
         self.address = address
         self.user_id = user_id
-        self.food_item = food_item
+        
 
     @classmethod
     def new(cls, user_name):
