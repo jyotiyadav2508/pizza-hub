@@ -36,8 +36,21 @@ order_data = []
 
 ORDER_OPTION_MSG = """
 Order type -
-Enter D for Home delivery
-Enter P for Pickup: 
+[D] - For Home delivery
+[P] - For Pickup: 
+"""
+
+DISPLAY_MENU_MSG = """
+[Item number] - To add item in your order list.
+[P] - To preview your order
+[Q] -  To quit
+"""
+
+PREVIEW_TEXT = """
+Item number] - To remove an item
+[A] - To add an item
+[C] - To confirm order
+[Q] - To quit
 """
 
 
@@ -53,7 +66,7 @@ def clear_screen():
 
 def get_user_details():
     """
-    Function to get user name and their type of order
+    Get user name and order type
     """
     user_data.clear()
     user_name = input("Enter your name: ")
@@ -79,7 +92,7 @@ def get_user_details():
                     f"\nYour selected delivery type is: {order_type}\n", "cyan"
                 )
             )
-            address = input("Enter your Full Address: ")
+            address = input("Enter your Address: ")
             print(colored(f"\nYour provided address: {address}\n", "cyan"))
             user_data.append(address)
         elif delivery_type == "P":
@@ -97,7 +110,6 @@ def get_user_details():
         clear_screen()
         display_menu_list()
         break
-        
 
 
 def display_menu_list():
@@ -108,9 +120,7 @@ def display_menu_list():
     display_menu = MENU.get_all_values()
     formatted_menu = tabulate(display_menu)
     print(formatted_menu)
-    print("\nEnter Item number to add item to order list.")
-    print("Enter P to preview your order")
-    print("Enter Q to quit\n")
+    print(DISPLAY_MENU_MSG)
     user_action()
 
 
@@ -123,18 +133,19 @@ def user_action():
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit():
             user_choice = int(user_choice)
-            if (user_choice >= 1) and (user_choice <= MAX_MENU_ITEM):
+            if (
+                user_choice >= 1
+                and user_choice <= len(MENU.get_all_values())
+            ):
                 item_number = user_choice
                 add_item(item_number)
                 print(
                     colored(
-                        "\nWhich other item would you like to add"
-                        " in your order?\n",
-                        "yellow",
+                        "\nSelected item saved in your order list", "yellow"
                     )
                 )
             else:
-                print(colored("\nInvalid input. Try again\n", "red"))
+                print(colored("\nItem doesn't exist in menu .\n", "red"))
         elif user_choice.capitalize() == "P":
             print(colored("\nLoading preview page....", "green"))
             sleep(2)
@@ -145,7 +156,6 @@ def user_action():
             print(colored("\nBack to home page...", "green"))
             sleep(1)
             clear_screen()
-            # welcome()
             break
         else:
             print(colored("\nInvalid input.\n", "red"))
@@ -153,7 +163,7 @@ def user_action():
 
 def add_item(item_number):
     """
-    Function to append user's order list on order list sheet
+    Append user's order in google spreed sheet
     """
     cell = MENU.find(str(item_number))
     order_row = MENU.row_values(cell.row)
@@ -163,7 +173,7 @@ def add_item(item_number):
 
 def preview_order():
     """
-    Function to preview the user's order
+    Preview user's order list
     """
     while True:
         user_order = ORDER_LIST.get_all_values()
@@ -175,46 +185,42 @@ def preview_order():
             numalign="center",
         )
         print(formatted_preview)
-        print("\n\nTo remove an item, enter Item number\n")
-        print("To add an item, enter A\n")
-        print("To confirm order, enter C\n")
-        print("To quit, enter Q\n")
+        print(PREVIEW_TEXT)
 
-        preview_choice = input("Enter your choice: ")
-        if preview_choice.isdigit() is True:
+        preview_option = input("Enter your choice: ")
+        if preview_option.isdigit():
+            preview_option = int(preview_option)
             if (
-                int(preview_choice) >= 1
-                and int(preview_choice) <= MAX_MENU_ITEM
+                (preview_option) >= 1
+                and (preview_option) <= len(MENU.get_all_values)
             ):
-                cell = ORDER_LIST.find(preview_choice)
+                cell = ORDER_LIST.find(preview_option)
                 if cell is not None:
                     ORDER_LIST.delete_rows(cell.row)
                     print(colored("\nRequested item removed!", "green"))
                     sleep(2)
                     clear_screen()
-                    # preview_order()
                 else:
                     print(colored("\nItem does not exist in the list", "red"))
             else:
-                print(colored("\nInvalid input\n", "red"))
-        elif preview_choice.capitalize() == "A":
+                print(colored("\nInvalid item number\n", "red"))
+        elif preview_option.capitalize() == "A":
             print(colored("\nLoading menu page....", "green"))
             sleep(1)
             clear_screen()
             display_menu_list()
             break
-        elif preview_choice.capitalize() == "C":
+        elif preview_option.capitalize() == "C":
             print(colored("\nLoading reciept....", "green"))
             sleep(1)
             clear_screen()
             display_order_receipt()
             break
-        elif preview_choice.capitalize() == "Q":
+        elif preview_option.capitalize() == "Q":
             print(colored("\nLoading home page....", "green"))
             ORDER_LIST.clear()
             sleep(1)
             clear_screen()
-            # welcome()
             break
         else:
             print(colored("\nInvalid input\n", "red"))
@@ -222,29 +228,24 @@ def preview_order():
 
 def display_order_receipt():
     """
-    Functon to display receipt with user datails and order list
+    Display receipt with user datails and order list
     """
     print(colored("****Your Reciept****\n", "yellow"))
     print(f"User name: {user_data[0]}")
     print(f"Order Id: {user_data[1]}")
     print(f"Order type: {user_data[2]}")
     print(f"Address: {user_data[3]}")
-    order_time = datetime.now()  # + timedelta(hours=1)
+    order_time = datetime.now()
     delivery_time = order_time + timedelta(minutes=30)
     pickup_time = order_time + timedelta(minutes=15)
-    order_time = order_time.strftime("%d-%m-%Y  %H:%M:%S")
-    delivery_time = delivery_time.strftime("%d-%m-%Y  %H:%M:%S")
-    pickup_time = pickup_time.strftime("%d-%m-%Y  %H:%M:%S")
-
+    order_time = order_time.strftime("H:%M:%S  %d-%m-%Y%")
+    delivery_time = delivery_time.strftime("%H:%M:%S  %d-%m-%Y ")
+    pickup_time = pickup_time.strftime("%H:%M:%S  %d-%m-%Y")
     print(f"Order time: {order_time}")
-    if user_data[2] == "Home delivery":
-        print(f"Delivery time: {delivery_time}\n")
-    else:
-        print(f"Pickup time: {pickup_time}\n")
     receipt = ORDER_LIST.get_all_values()
     price = ORDER_LIST.col_values(3)
     total_price = 0
-    # delivery_charge = 5
+    delivery_charge = 5
     for item in price:
         price = float(item.split("€")[1])
         total_price += price
@@ -257,19 +258,27 @@ def display_order_receipt():
             numalign="center",
         )
     )
-    # if user_data[2] == "Home delivery":
-    #     print(colored(
-    #         f'\nThere is a delivey charge of €{float(delivery_charge):.2f}'))
-    #     display_total_price = display_total_price + str(round(delivery_charge, 2))
-    #     print(colored(
-    #         f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
-    # else:
-    print(
-        colored(
-            f"\nTotal price of your order: {display_total_price}\n", "yellow"
+    if user_data[2] == "Home delivery":
+        print(
+            colored(
+                f"\nThere is a delivey charge of €{float(delivery_charge):.2f}")
         )
-    )
-    print(colored("Thanks for your order. Enjoy your meal!\n", "yellow"))
+        display_total_price = "€" + str((total_price) + (round(delivery_charge, 2)))
+        print(colored(
+            f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
+    else:
+        print(
+            colored(
+                f"\nTotal price of your order: {display_total_price}\n", "yellow"
+            )
+        )
+    if user_data[2] == "Home delivery":
+        print(colored(
+            f"Your order will be delivered at {delivery_time}\n", 'yellow'))
+    else:
+        print(colored(
+            f"Your order will be ready for Pickup at {pickup_time}\n", 'yellow'))
+    print(colored("Thanks for your order. Enjoy your meal!\n", "green"))
     i = 0
     while i < len(receipt):
         for item in receipt:
