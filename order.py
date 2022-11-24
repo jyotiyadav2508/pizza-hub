@@ -34,10 +34,17 @@ MAX_MENU_ITEM = len(MENU.get_all_values())
 user_data = []
 order_data = []
 
+WELCOME_MSG = """
+Welcome to The Pizza Hub
+Are you want to start youe order now?
+[Y] - Yes
+[N] - No
+"""
+
 ORDER_OPTION_MSG = """
-Order type -
+Enter your choice for order type -
 [D] - For Home delivery
-[P] - For Pickup: 
+[P] - For Pickup:
 """
 
 DISPLAY_MENU_MSG = """
@@ -75,6 +82,7 @@ def get_user_details():
     user_order_id = random.getrandbits(16)
     user_data.append(user_name)
     user_data.append(user_order_id)
+    order_data.append(user_order_id)
     print(colored(f"\nWelcome {user_name}!\n", "cyan"))
     while True:
         delivery_type = input(
@@ -128,7 +136,7 @@ def user_action():
     """
     Displays user action after getting the menu.
     """
-    order_data.clear()
+    # order_data.clear()
     while True:
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit():
@@ -153,8 +161,6 @@ def user_action():
             preview_order()
             break
         elif user_choice.capitalize() == "Q":
-            print(colored("\nBack to home page...", "green"))
-            sleep(1)
             clear_screen()
             break
         else:
@@ -167,8 +173,9 @@ def add_item(item_number):
     """
     cell = MENU.find(str(item_number))
     order_row = MENU.row_values(cell.row)
-    row = order_row
-    ORDER_LIST.append_row(row)
+    order_row.append(order_data[0])
+    ORDER_LIST.append_row(order_row)
+    print(order_row)
 
 
 def preview_order():
@@ -176,11 +183,17 @@ def preview_order():
     Preview user's order list
     """
     while True:
-        user_order = ORDER_LIST.get_all_values()
+        unique_id_row = []
+    
+        for row in ORDER_LIST.get_all_values():
+            for item in row:
+                if item == str(order_data[0]):
+                    row.pop(3)
+                    unique_id_row.append(row)
         print(colored("------Order Preview------\n", "cyan"))
         formatted_preview = tabulate(
-            user_order,
-            headers=["Item", "Name", "Price"],
+            unique_id_row,
+            headers=["Item", "Name", "Price", "order Id"],
             tablefmt="simple",
             numalign="center",
         )
@@ -238,32 +251,38 @@ def display_order_receipt():
     order_time = datetime.now()
     delivery_time = order_time + timedelta(minutes=30)
     pickup_time = order_time + timedelta(minutes=15)
-    order_time = order_time.strftime("H:%M:%S  %d-%m-%Y%")
-    delivery_time = delivery_time.strftime("%H:%M:%S  %d-%m-%Y ")
+    order_time = order_time.strftime("%H:%M:%S  %d-%m-%Y")
+    delivery_time = delivery_time.strftime("%H:%M:%S  %d-%m-%Y")
     pickup_time = pickup_time.strftime("%H:%M:%S  %d-%m-%Y")
     print(f"Order time: {order_time}")
-    receipt = ORDER_LIST.get_all_values()
-    price = ORDER_LIST.col_values(3)
+    unique_receipt = []
+    for row in ORDER_LIST.get_all_values():
+        for item in row:
+            if item == str(order_data[0]):
+                row.pop(3)
+                unique_receipt.append(row)
+    
+    # price = ORDER_LIST.col_values(3)
     total_price = 0
-    delivery_charge = 5
-    for item in price:
-        price = float(item.split("€")[1])
+    delivery_charge = 5.00
+    for item in unique_receipt:
+        price = float(item[2].split("€")[1])
         total_price += price
         display_total_price = "€" + str(round(total_price, 2))
     print(
         tabulate(
-            receipt,
+            unique_receipt,
             headers=["Item", "Name", "Price"],
             tablefmt="simple",
             numalign="center",
         )
     )
-    if user_data[2] == "Home delivery":
+    if user_data[1] == "Home delivery":
         print(
             colored(
                 f"\nThere is a delivey charge of €{float(delivery_charge):.2f}")
         )
-        display_total_price = "€" + str((total_price) + (round(delivery_charge, 2)))
+        display_total_price = "€" + str(total_price + delivery_charge)
         print(colored(
             f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
     else:
@@ -272,7 +291,7 @@ def display_order_receipt():
                 f"\nTotal price of your order: {display_total_price}\n", "yellow"
             )
         )
-    if user_data[2] == "Home delivery":
+    if user_data[1] == "Home delivery":
         print(colored(
             f"Your order will be delivered at {delivery_time}\n", 'yellow'))
     else:
@@ -280,15 +299,13 @@ def display_order_receipt():
             f"Your order will be ready for Pickup at {pickup_time}\n", 'yellow'))
     print(colored("Thanks for your order. Enjoy your meal!\n", "green"))
     i = 0
-    while i < len(receipt):
-        for item in receipt:
+    while i < len(unique_receipt):
+        for item in unique_receipt:
             receipt_data = []
-            # user_data.append(item)
-            # print(user_data)
             receipt_data = user_data + item
             RECEIPT_LIST.append_row(receipt_data)
             i += 1
-    ORDER_LIST.clear()
+    # ORDER_LIST.clear()
     # user_input = input("To quit, enter Q: ")
     # if user_input.capitalize() == "Q":
     #     ORDER_LIST.clear()
