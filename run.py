@@ -6,10 +6,9 @@ needed to access our Google Cloud Project.
 import os
 from time import sleep
 from datetime import datetime, timedelta
-
-# import uuid
 import random
 import gspread
+import pyfiglet
 from google.oauth2.service_account import Credentials
 from tabulate import tabulate
 from termcolor import colored
@@ -64,7 +63,7 @@ Item number] - To remove an item
 
 def clear_screen():
     """
-    Function to clear screen
+    Clear the current open screen
     """
     if os.name == "posix":
         os.system("clear")
@@ -78,13 +77,11 @@ def get_user_details():
     """
     user_data.clear()
     user_name = input("Enter your name: ")
-    # order_id = uuid.uuid1()
-    # print(order_id)
     user_order_id = random.getrandbits(16)
     user_data.append(user_name)
     user_data.append(user_order_id)
     order_data.append(user_order_id)
-    print(colored(f"\nWelcome {user_name}!\n", "cyan"))
+    print(colored(f"\nWelcome {user_name}!\n", "yellow"))
     while True:
         delivery_type = input(
             ORDER_OPTION_MSG
@@ -98,18 +95,18 @@ def get_user_details():
             user_data.append(order_type)
             print(
                 colored(
-                    f"\nYour selected delivery type is: {order_type}\n", "cyan"
+                    f"Your selected delivery type is: {order_type}\n", "yellow"
                 )
             )
             address = input("Enter your Address: ")
-            print(colored(f"\nYour provided address is {address}\n", "cyan"))
+            print(colored(f"\nYour provided address is {address}\n", "yellow"))
             user_data.append(address)
         elif delivery_type == "P":
             order_type = "Pickup"
             user_data.append(order_type)
             print(
                 colored(
-                    f"\nYour selected delivery type is: {order_type}", "cyan"
+                    f"\nYour selected delivery type is: {order_type}", "yellow"
                 )
             )
             user_data.append("The Pizza Hub")
@@ -127,8 +124,6 @@ def display_menu_list():
     in formatted tabulate form to user.
     """
     display_menu = MENU.get_all_values()
-    # formatted_menu = tabulate(display_menu)
-    # print(formatted_menu)
     print(tabulate(display_menu))
     print(DISPLAY_MENU_MSG)
     user_action()
@@ -139,9 +134,7 @@ def user_action():
     Displays user action after getting the menu.
     """
     item_number = 0
-    # order_data.clear()
     while True:
-        # item_number = 0
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit():
             user_choice = int(user_choice)
@@ -161,8 +154,7 @@ def user_action():
         elif user_choice.capitalize() == "P":
             if item_number == 0:
                 print(colored(
-                    "Your list is empty. Please add item first.\n", 'yellow'))
-                
+                    "Your list is empty. Please add items.\n", 'yellow'))
             else:
                 print(colored("\nLoading preview page....", "green"))
                 sleep(2)
@@ -170,6 +162,8 @@ def user_action():
                 preview_order()
                 break
         elif user_choice.capitalize() == "Q":
+            print(colored("\nThanks for visiting us\n", 'yellow'))
+            sleep(2)
             clear_screen()
             break
         else:
@@ -182,10 +176,7 @@ def add_item(item_number):
     """
     cell = MENU.find(str(item_number))
     order_row = user_data + MENU.row_values(cell.row) + ["Processing"]
-    # order_row.append(order_data[0])
-    # ORDER_LIST.append_row(user_data)
     ORDER_LIST.append_row(order_row)
-    # print(order_row)
 
 
 def preview_order():
@@ -193,39 +184,13 @@ def preview_order():
     Preview user's order list
     """
     local_user_data = get_individual_user_data()
-    # for row in ORDER_LIST.get_all_values():
-    #     for item in row:
-    #         if item == str(order_data[0]):
-    #             row.pop(7)
-    #             del row[0:4]
-                
-    #             individual_user_data.append(row)
-    #     print(individual_user_data)
-    #     tabulate_preview(individual_user_data)
     i = True
     while True:
-        # for row in ORDER_LIST.get_all_values():
-        #     for item in row:
-        #         if item == str(order_data[0]):
-        #             row.pop(7)
-        #             del row[0:4]
-                    
-        #             individual_user_data.append(row)
-        # print(individual_user_data)
-        # tabulate_preview(individual_user_data)
-        # print(colored("------Order Preview------\n", "cyan"))
-        # formatted_preview = tabulate(
-        #     individual_user_data,
-        #     headers=["Item", "Name", "Price"],
-        #     tablefmt="simple",
-        #     numalign="center"
-        # )
         if i:
+            print(colored("------Order Preview------\n", "yellow"))
             tabulate_preview(local_user_data)
             print(PREVIEW_TEXT)
             i = False
-        # clear_screen()
-        
         preview_option = input("Enter your choice: ")
         if preview_option.isdigit():
             preview_option = int(preview_option)
@@ -238,14 +203,6 @@ def preview_order():
                 clear_screen()
                 tabulate_preview(local_user_data)
                 print(PREVIEW_TEXT)
-                # cell = ORDER_LIST.find(str(preview_option))
-                # if cell is not None:
-                #     ORDER_LIST.delete_rows(cell.row)
-                #     print(colored("\nRequested item removed!", "green"))
-                #     sleep(2)
-                #     clear_screen()
-                # else:
-                #     print(colored("\nItem does not exist in the list", "red"))
             else:
                 print(colored("\nInvalid item number\n", "red"))
         elif preview_option.capitalize() == "A":
@@ -258,13 +215,12 @@ def preview_order():
             append_order_confirmation()
             print(colored("\nLoading reciept....", "green"))
             sleep(2)
-            # clear_screen()
-            # display_order_receipt()
+            clear_screen()
+            display_order_receipt()
             break
         elif preview_option.capitalize() == "Q":
             print(colored("\nThanks for visiting us!", "green"))
-            ORDER_LIST.clear()
-            sleep(1)
+            sleep(2)
             clear_screen()
             break
         else:
@@ -272,78 +228,52 @@ def preview_order():
 
 
 def remove_item(item):
+    """
+    Remove an item when preview user's order
+    """
     cell = ORDER_LIST.find(str(item))
     if cell is not None:
         ORDER_LIST.delete_rows(cell.row)
-        print(colored("\nRequested item removed!", "green"))
+        print(colored("\nRemoving requested item...", "green"))
         sleep(2)
         clear_screen()
-        # preview_order()
     else:
         print(colored("\nItem does not exist in the list", "red"))
+        sleep(2)
 
 
 def tabulate_preview(user_info):
-    print(colored("------Order Preview------\n", "cyan"))
-    formatted_preview = tabulate(user_info, headers=["Item", "Name", "Price"],  
-                                tablefmt="simple", numalign="center")
+    """
+    Formate order preview in table form
+    """
+    # print(colored("------Order Preview------\n", "cyan"))
+    formatted_preview = tabulate(user_info, headers=[
+        "Item", "Name", "Price"], tablefmt="simple", numalign="center")
     print(formatted_preview)
 
 
 def get_individual_user_data():
+    """
+    Get user data with unique Id
+    """
     individual_user_data = []
     for row in ORDER_LIST.get_all_values():
         for item in row:
             if item == str(order_data[0]):
                 row.pop(7)
                 del row[0:4]
-                # print(row)
                 individual_user_data.append(row)
-        # tabulate_preview(individual_user_data)
     return individual_user_data
 
 
 def append_order_confirmation():
     """
-    Function
+    Update order status in gspread when user confirmed his order
     """
     cells_list = ORDER_LIST.findall(str(order_data[0]))
-    print(cells_list)
     for cell in cells_list:
-        print(cell)
         confirmation_cell = 'H' + str(cell.row)
         ORDER_LIST.update(confirmation_cell, 'Confirmed')
-        print(confirmation_cell)
-        # confirmation_cell.value = 'Confirmed'
-    # ORDER_LIST.update_cells(cells_list)
-
-
-    # i = 0
-    # while i < len(ORDER_LIST.get_all_values()):
-    #     cell = ORDER_LIST.findall(str(order_data[0]))
-    #     if 
-    #     ORDER_LIST.update_cells(('H' + str(cell.row)), 'Confirmed')
-    #     i += 1
-
-    # i = 0
-    # while i < len(ORDER_LIST.get_all_values()):
-    # for row in ORDER_LIST.get_all_values():
-    #     for item in row:
-    #         if item == str(order_data[0]):
-    #             row[7] = 'Confirmed'
-    #     ORDER_LIST.append_row(row)
-            # cell = ORDER_LIST.find(str(order_data[0]))
-            # ORDER_LIST.update(('H' + str(cell.row)), 'Confirmed')
-        # i += 1
-        # print(cell)
-    
-
-        # for item in row:
-
-        # # item = item + ["Confirmed"]
-        # item.append("Confirmed")
-        # print(item)
-        # print(individual_user_data)
 
 
 def display_order_receipt():
@@ -362,18 +292,8 @@ def display_order_receipt():
     delivery_time = delivery_time.strftime("%H:%M:%S  %d-%m-%Y")
     pickup_time = pickup_time.strftime("%H:%M:%S  %d-%m-%Y")
     print(f"Order time: {order_time}\n")
-    # individual_user_receipt = []
-    # for row in ORDER_LIST.get_all_values():
-    #     for item in row:
-    #         if item == str(order_data[0]):
-    #             del row[0:4]
-    #             individual_user_receipt.append(row)
-    #             print(individual_user_receipt)
-    
-    # price = ORDER_LIST.col_values(3)
     total_price = 0
     delivery_charge = 5.00
-    # print(global_individual_user_data)
     local_user_data = get_individual_user_data()
     for item in local_user_data:
         price = float(item[2].split("€")[1])
@@ -381,15 +301,6 @@ def display_order_receipt():
         display_total_price = "€" + str(round(total_price, 2))
 
     tabulate_preview(local_user_data)
-    # print(
-    #     tabulate(
-    #         local_user_data,
-    #         headers=["Item", "Name", "Price"],
-    #         tablefmt="simple",
-    #         numalign="center"
-    #     )
-    # )
-    # print(display_total_price)
     if user_data[2] == "Home delivery":
         print(
             f"\nThere is a delivey charge of €{float(delivery_charge):.2f}"
@@ -410,32 +321,22 @@ def display_order_receipt():
         print(colored(
             f"Your order will be ready for Pickup at {pickup_time}", 'yellow'))
     print(colored("\nThanks for your order. Enjoy your meal!", "green"))
-    # i = 0
-    # while i < len(individual_user_data):
-    #     for item in individual_user_data:
-    #         receipt_data = []
-    #         receipt_data = user_data + item
-    #         RECEIPT_LIST.append_row(receipt_data)
-    #         i += 1
-    # j = 0
-    # while j < len(ORDER_LIST.get_all_values()):
-    #     cell = ORDER_LIST.find(str(order_data[0]))
-    #     print(cell)
-    #     ORDER_LIST.delete_rows(cell.row)
-    #     j += 1
-
-    # ORDER_LIST.clear()
-    # user_input = input("To quit, enter Q: ")
-    # if user_input.capitalize() == "Q":
-    #     ORDER_LIST.clear()
-    #     clear_screen()
-    #     welcome()
+    while True:
+        end = input("\nEnter Q to quit: ")
+        if end.capitalize() == "Q":
+            clear_screen()
+            print(colored("\nThanks for visiting us\n", 'yellow'))
+            sleep(2)
+            clear_screen()
+            break
 
 
 def welcome():
     """
     Function to display home page
     """
+    title = 'The Pizza Hub'
+    print(colored(pyfiglet.figlet_format(title), 'green'))
     print(colored(WELCOME_MSG, "yellow"))
     while True:
         start_order = input("\nEnter your choice:")
@@ -444,7 +345,7 @@ def welcome():
             get_user_details()
             break
         elif start_order.capitalize() == "N":
-            print(colored("\nThanks for visiting us\n", 'yellow'))
+            print(colored("\nThanks for visiting us!\n", 'yellow'))
             sleep(2)
             clear_screen()
             break

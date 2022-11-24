@@ -1,12 +1,11 @@
-Order Id    User Name   Address     Delivery Type   Item No
-1           Sandeep                                 1
-1           Sandeep                                 4
+Bugs: preview page:
+1. Sometimes item does not remove.
+2. if we press item number between 1-15, which is not in preview list, shows msg "Item doesn't exist but soon disappear."
 
 
 
-User Info
-Name        Address     
-Sandeep     Delhi
+Left to implement 
+1. if click C when preview list is empty, then show msg "List is empty"
 
 
 
