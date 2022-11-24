@@ -36,7 +36,7 @@ order_data = []
 
 WELCOME_MSG = """
 Welcome to The Pizza Hub
-Are you want to start youe order now?
+Do you want to start your order now?
 [Y] - Yes
 [N] - No
 """
@@ -101,7 +101,7 @@ def get_user_details():
                 )
             )
             address = input("Enter your Address: ")
-            print(colored(f"\nYour provided address: {address}\n", "cyan"))
+            print(colored(f"\nYour provided address is {address}\n", "cyan"))
             user_data.append(address)
         elif delivery_type == "P":
             order_type = "Pickup"
@@ -126,8 +126,9 @@ def display_menu_list():
     in formatted tabulate form to user.
     """
     display_menu = MENU.get_all_values()
-    formatted_menu = tabulate(display_menu)
-    print(formatted_menu)
+    # formatted_menu = tabulate(display_menu)
+    # print(formatted_menu)
+    print(tabulate(display_menu))
     print(DISPLAY_MENU_MSG)
     user_action()
 
@@ -153,7 +154,7 @@ def user_action():
                     )
                 )
             else:
-                print(colored("\nItem doesn't exist in menu .\n", "red"))
+                print(colored("\nItem doesn't exist in the menu.\n", "red"))
         elif user_choice.capitalize() == "P":
             print(colored("\nLoading preview page....", "green"))
             sleep(2)
@@ -183,19 +184,18 @@ def preview_order():
     Preview user's order list
     """
     while True:
-        unique_id_row = []
-    
+        individual_user_id_row = []
         for row in ORDER_LIST.get_all_values():
             for item in row:
                 if item == str(order_data[0]):
                     row.pop(3)
-                    unique_id_row.append(row)
+                    individual_user_id_row.append(row)
         print(colored("------Order Preview------\n", "cyan"))
         formatted_preview = tabulate(
-            unique_id_row,
+            individual_user_id_row,
             headers=["Item", "Name", "Price", "order Id"],
             tablefmt="simple",
-            numalign="center",
+            numalign="center"
         )
         print(formatted_preview)
         print(PREVIEW_TEXT)
@@ -219,18 +219,18 @@ def preview_order():
                 print(colored("\nInvalid item number\n", "red"))
         elif preview_option.capitalize() == "A":
             print(colored("\nLoading menu page....", "green"))
-            sleep(1)
+            sleep(2)
             clear_screen()
             display_menu_list()
             break
         elif preview_option.capitalize() == "C":
             print(colored("\nLoading reciept....", "green"))
-            sleep(1)
+            sleep(2)
             clear_screen()
             display_order_receipt()
             break
         elif preview_option.capitalize() == "Q":
-            print(colored("\nLoading home page....", "green"))
+            print(colored("\nThanks for visiting us!", "green"))
             ORDER_LIST.clear()
             sleep(1)
             clear_screen()
@@ -254,41 +254,41 @@ def display_order_receipt():
     order_time = order_time.strftime("%H:%M:%S  %d-%m-%Y")
     delivery_time = delivery_time.strftime("%H:%M:%S  %d-%m-%Y")
     pickup_time = pickup_time.strftime("%H:%M:%S  %d-%m-%Y")
-    print(f"Order time: {order_time}")
-    unique_receipt = []
+    print(f"Order time: {order_time}\n")
+    individual_user_receipt = []
     for row in ORDER_LIST.get_all_values():
         for item in row:
             if item == str(order_data[0]):
                 row.pop(3)
-                unique_receipt.append(row)
+                individual_user_receipt.append(row)
     
     # price = ORDER_LIST.col_values(3)
     total_price = 0
     delivery_charge = 5.00
-    for item in unique_receipt:
+    for item in individual_user_receipt:
         price = float(item[2].split("€")[1])
         total_price += price
         display_total_price = "€" + str(round(total_price, 2))
     print(
         tabulate(
-            unique_receipt,
+            individual_user_receipt,
             headers=["Item", "Name", "Price"],
             tablefmt="simple",
-            numalign="center",
+            numalign="center"
         )
     )
-    if user_data[1] == "Home delivery":
+    if user_data[2] == "Home delivery":
         print(
             colored(
                 f"\nThere is a delivey charge of €{float(delivery_charge):.2f}")
         )
         display_total_price = "€" + str(total_price + delivery_charge)
         print(colored(
-            f"\nTotal price of your order: {display_total_price}\n", 'yellow'))
+            f"Total price of your order: {display_total_price}", 'yellow'))
     else:
         print(
             colored(
-                f"\nTotal price of your order: {display_total_price}\n", "yellow"
+                f"\nTotal price of your order: {display_total_price}", "yellow"
             )
         )
     if user_data[1] == "Home delivery":
@@ -296,11 +296,11 @@ def display_order_receipt():
             f"Your order will be delivered at {delivery_time}\n", 'yellow'))
     else:
         print(colored(
-            f"Your order will be ready for Pickup at {pickup_time}\n", 'yellow'))
-    print(colored("Thanks for your order. Enjoy your meal!\n", "green"))
+            f"Your order will be ready for Pickup at {pickup_time}", 'yellow'))
+    print(colored("\nThanks for your order. Enjoy your meal!\n", "green"))
     i = 0
-    while i < len(unique_receipt):
-        for item in unique_receipt:
+    while i < len(individual_user_receipt):
+        for item in individual_user_receipt:
             receipt_data = []
             receipt_data = user_data + item
             RECEIPT_LIST.append_row(receipt_data)
@@ -317,9 +317,9 @@ def welcome():
     """
     Function to display home page
     """
-    print(colored("Welcome to Pizza Hub!\n", "yellow"))
+    print(colored(WELCOME_MSG, "yellow"))
     while True:
-        start_order = input("\nTo order now, Please enter Y: ")
+        start_order = input("\nEnter your choice: ")
         print(start_order)
         if start_order.capitalize() == "Y":
             clear_screen()
@@ -329,7 +329,7 @@ def welcome():
             break
         else:
             print(
-                colored("Invalid input. Enter Y to start your order.\n", "red")
+                colored("Invalid input. Enter Y to start.\n", "red")
             )
 
 
