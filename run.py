@@ -244,7 +244,7 @@ def remove_item(item):
         order_id_index.append(order_id_cell.row)
 
     item_index = []
-    for item_cell in item_cell_list:  
+    for item_cell in item_cell_list:
         item_index.append(item_cell.row)
 
     order_id_set = set(order_id_index)
@@ -325,7 +325,8 @@ def display_order_receipt():
 
     tabulate_preview(local_user_data)
     if user_data[2] == "Home delivery":
-        print(colored(f"\nDelivey charge: €{float(delivery_charge):.2f}", "yellow"))
+        print(colored(
+            f"\nDelivey charge: €{float(delivery_charge):.2f}", "yellow"))
         display_total_price = "€" + str(total_price + delivery_charge)
         print(colored(
             f"Total price of your order: {display_total_price}", 'yellow'))

@@ -435,16 +435,18 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 ## Bugs
 
-| Bug     | Unfix       | 
+| Bug     | Fix       | 
 | --------| ------------| 
-| Sometimes remove item function doesn't remove the desired item on preview page. It works after 2-3 attempts |       |
+| |       |
 
 
 | Bug     | Fix       | 
 | --------| ------------| 
-| Append_order_confirmation function updates order status for only one item instead of all the items for the specific user in the worksheet 'order_list'  | Use findall function instead of find function for finding user specific order data  |
+| Append order confirmation function updates order status for only one item instead of all the items for the specific user in the worksheet 'order_list'  | Use findall function instead of find function for finding user specific order data  |
 | When multiple user order in parallel, the preview function displays items being ordered by all users instead of user specific items  |  Generate unique order id for each user and then search all items for specific order id to tabulate user specific order data for preview page  |
 | When user removes an item on preview page, the leftover items are appended to the previously added items in the order list  |  Instead of using global variable for retreiving individual user data, use local variable in get individual user data function to fetch current order data for individual user | 
+| Sometimes remove item function doesn't remove the desired item on preview page. It works after 2-3 attempts | Use the findall function to find cells with specific item number & specific order ID and subsequently identify common row using sets to ensure removal of specific requested item from worksheet |
+
 
 ## Deployment
 
