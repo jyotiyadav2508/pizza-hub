@@ -2,7 +2,7 @@
 
 Developer: Jyoti Yadav
 
-The live link of website- ![Live Link](#top)(https://the-pizza-hub.herokuapp.com/)
+[View live website](https://the-pizza-hub.herokuapp.com/)
 
 The Pizza Hub website has been developed to provide users the chance to order Pizza for home delivery or pick-up via a command line based interface.
 
@@ -369,6 +369,50 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 ### Heroku
 
+This project was deployed to Heroku with following steps:
+
+1. Use the "pip freeze -> requiremnts.txt" command in the terminal to save any libraries that need to be installed in the file.
+2. Navigate to https://www.heroku.com/ and login or create an account. 
+3. Click the "new" button in the upper right corner and select "create new app".
+<details>
+<summary>Screenshot</summary>
+<img src="screenshots/deployment/create_new_app.jpg">
+</details>
+
+4. Choose an app name, region and click "Create app".
+<details>
+<summary>Screenshot</summary>
+<img src="screenshots/deployment/app_name.jpg">
+</details>
+
+5. Under Config Vars store any sensitive data which saved in .json file. Name CREDS in Key field, copy the .json file and paste it to 'Value' field. Also add a key 'PORT' and value '8000'.
+<details>
+<summary>Screenshot</summary>
+<img src="screenshots/deployment/config_var.jpg">
+</details>
+
+6. Go to the "settings" tab, add first the Python build pack and then the node.js build pack.
+<details>
+<summary>Screenshot</summary>
+<img src="screenshots/deployment/add_buildpack.jpg">
+</details>
+
+7. Go to the "deploy" tab and pick GitHub as a deployment method.
+<details>
+<summary>Screenshot</summary>
+<img src="screenshots/deployment/deployment_method.jpg">
+</details>
+
+8. Click the connect button in order to connect it to github.
+
+9. In the "Choose a branch to deploy" section 'main' was auto selected so clicked on deploy branch.
+<details>
+<summary>Screenshot</summary>
+<img src="screenshots/deployment/manual_deploy.jpg">
+</details>
+ 
+10. Wait for the app to build and then click on the "View" link which leads to the deployed link.
+
 ### Forking the GitHub Repository
 
 ### Clone a GitHub Repository
@@ -395,4 +439,4 @@ I would like to also thank the following:
   - Code Institute tutor support who helped me with different issues while doing the project.
   
 
-[Back to Top](#top)
+[Back to Top](#the-pizza-hub)
