@@ -47,8 +47,9 @@ The Pizza Hub website has been developed to provide users the chance to order Pi
  - Be able to easily interact with the app to order pizza for pick up or home delivery.
  - Navigate the app seamlessly.
  - Receive clear instructions on their current input options.
- - Be able to add and remove items from an order or cancel the order prior to submission.
+ - Be able to add and remove items from an order prior to order confirmation.
  - The ability to preview their order.
+ - Be able to quit the app from any page.
 
 ### Site Owner Goals
 
@@ -57,7 +58,7 @@ The Pizza Hub website has been developed to provide users the chance to order Pi
  - To provide the customer the ability to preview their orders.
  - To provide the customer to choose order confirmation or quit.
  - To provide the customer to exit any time.
- - Ensure all user inputs are validated and errors handled as to not provide issues with orders and a negative user experience.
+ - Ensure all user inputs are validated and errors are handled to provide a good user experience.
 
 ## User Experience
 
@@ -75,7 +76,7 @@ The Pizza Hub website has been developed to provide users the chance to order Pi
 
 ### User Stories
 
-#### First-time  User
+#### Site User
 
 1. As a user, I want to be:
     - provided with clear instructions throughout the app.
@@ -86,16 +87,15 @@ The Pizza Hub website has been developed to provide users the chance to order Pi
     - able to preview an order.
     - able to cancel an unplaced order.
     - able to place an order.
-    - shown a receipt.
+    - able to see an order receipt.
     - able to exit the app.
 
 #### Site Owner
 
-2. As the site owner, I would want:
-    - user to be greeted with a welcome message to give a friendly feel to the app.
-    - user information to be saved to a Google Sheets file.
-    - orders to be saved to a Google Sheets file.
-    - user to get feedback based on their input.
+2. As a site owner, I would want:
+    - users to be greeted with a welcome message to give a friendly feel to the app.
+    - to save the user information and order data to a Google Sheets file.
+    - users to get feedback based on their input.
 
 ### User Manual
 <details><summary>Instructions</summary>
@@ -108,13 +108,13 @@ The Pizza Hub app is for users who wish to place orders for home delivery / pick
 
 #### Home Page
 
-The home page opens with the shop name "The Pizza Hub". A welcome page greets the users and asked if they would like to make an order. Users will be provdided with 2 options: Yes and No. Selecting yes will take the user to the main screen while selecting no will exit the app.
+The home page opens with the store name "The Pizza Hub". A welcome page greets the users and asked if they would like to make an order. Users will be provdided with 2 options: Yes and No. Selecting yes will take the user to the main screen while selecting no will exit the app.
 
 ----
 
 #### Main Page
 
-The purpose of the main page is to get the user details. Users are asked to provide their name and choice of delivery type. If home delivery option is selected then home address is asked.
+The purpose of the main page is to get the user details. Users are asked to provide their name and choice of delivery type. If a home delivery option is selected then home address is also asked.
 
 ----
 
@@ -122,7 +122,7 @@ The purpose of the main page is to get the user details. Users are asked to prov
 
 On the Menu page users are provided with a table format of the menu with the range of items available for order. Users will be provdided with three options.
 
-  - Item number will add the item of the input number to the order, users will be provided with feedback to save their selected item in order list and also a warning message if an invalid input has been entered.
+  - Item number -  To add the item to the order, users will be provided with feedback showing their selected item has been added to the order list and also a warning message if an invalid input has been entered.
   - Q - To cancel order, view thank you message and exit the app.
   - P - To preview the current order.
 
@@ -130,7 +130,7 @@ On the Menu page users are provided with a table format of the menu with the ran
 
 #### Preview page
 
-The preview page shows the user's selected order list in a table format. The table describes the selected item with food name and price details. Also it provides user four options.
+The preview page shows the user's selected order list in a table format. The table shows the item details like item name and price. Also it provides user four options.
 
   - Item number - To remove any item from the list by entering item number. Invalid input will be warned with a message.
   - A - To add more item, user go back to menu page.
@@ -141,7 +141,7 @@ The preview page shows the user's selected order list in a table format. The tab
 
 #### Receipt page
 
-The receipt page is shown when the user confirms the order. Receipt page displays user's order with their name, unique order ID, order type, address, order time, delivery time and total price of the order. Quit option is shown along with a thank you message.
+The receipt page is shown when the user confirms the order. Receipt page displays user's order with their name, unique order ID, order type, address, order time, delivery / pickup time and total price of the order. Quit option is shown along with a thank you message.
 
 ----
 </details>
@@ -163,7 +163,9 @@ The following flowchart was created to help identify functions that would be req
 
 ### Data Models
 
-  - Lists and dictionaries - This project uses list and dictionaries to aid the storage of data from the Google Sheets file to variables and vice versa. Using list comprehension dictionaries are used to validate if the user input for ordering an item exists and to store/view order records.
+This project uses Object Orientated Programming to interact and manipulate the following:
+
+  - Lists - This project uses list to aid the storage of data from the Google Sheets file to variables and vice versa.
 
   - Google Sheets API - Google Sheets was used in this project to store all required data outside the container.
 
@@ -196,7 +198,7 @@ The following flowchart was created to help identify functions that would be req
 
 ### Third Party Libraries
 
- - tabulate - I used this library to output lists and dictionaries in a table format enhancing user experience and overall readability.
+ - tabulate - I used this library to output lists in a table format enhancing user experience and overall readability.
  - termcolor - I used this library to give colour to user feedback and instructions.
  - pyfiglet - I used this library to generate the text art messages.
  - gspread - I used this library to add, remove and manipulate data within my Google Sheets worksheets and to interact with Google APIs
@@ -210,91 +212,137 @@ The following flowchart was created to help identify functions that would be req
 
 The welcome message is featured on the home page and will greet users with a friendly message.
 
-[Welcome message image]()
+<details>
+<summary>Welcomw message image</summary>
+<img src = "">
+</details>
 
 ### Welcome message invalid input feedback
 
 The welcome message invalid input feedback is featured on the welcome page and will alert users of an invalid option entry.
 
-[Welcome message invalid input image]()
+<details>
+<summary>Welcome message invalid input image</summary>
+<img src = "">
+</details>
 
 ### User Name
 
 This page asks users to provide their name.
-[User details image]()
+
+<details>
+<summary>User details image</summary>
+<img src = "">
+</details>
 
 ### Delivery Type Options
 
- There are two delivery type options, one being home delivery and another of pickup. Pickup will auto populate the address as The Pizza Hub. For home delivery, customers will be asked to enter their address.
+There are two delivery type options, one for home delivery and another for pickup. Pickup will auto populate the address as 'The Pizza Hub'. For home delivery, customers will be asked to enter their address.
 
- [delivery type image]()
+<details>
+<summary>delivery type image</summary>
+<img src = "">
+</details>
 
  ### Menu
  
 The Menu feature will display a tabulated format of all items available for order. The menu has three options: Add item, preview order, quit.
 
-[Menu img]()
+<details>
+<summary>Menu img</summary>
+<img src = "">
+</details>
 
 ### Add item to order
 
-The Add item to order feature on the Menu page allows users to add an item to their order by typing the relevant number as displayed on the menu.
+The Add item to order feature on the Menu page allows users to add an item to their order by typing the relevant item number as displayed on the menu.
 
-[Add item to order image]()
+<details>
+<summary>Add item to order image</summary>
+<img src = "">
+</details>
 
 ### Invalid item from order
 
 The Invalid item feature on the Menu page warns users that their previously entered input is not valid.
 
-[invalid menu number]()
+<details>
+<summary>Invalid food item number image</summary>
+<img src = "">
+</details>
 
 ### Empty order list warning
 
 The empty order list warning feature on the Menu page will warn users that their order list is empty, therefore no preview is possible.
 
-[invalid menu number]()
+<details>
+<summary>Empty list warning image</summary>
+<img src = "">
+</details>
 
 ### Preview order
 
 The preview order feature on the Menu page allows users to preview the items currently added to their order.
 
-[Preview order image]()
+<details>
+<summary>Preview order image</summary>
+<img src = "">
+</details>
 
 ### Remove itam
 
 The remove item feature on the preview page allows users to remove any selected item from user's order list.
 
-[Remove item image]()
-
+<details>
+<summary>Remove item image</summary>
+<img src = "">
+</details>
 
 ### Confirm order
 
 The confirm order is a feature that will allow users to confirm the order and allows us to generate the receipt.
 
-[Confirmation order image]()
+<details>
+<summary>Confirmation order image</summary>
+<img src = "">
+</details>
+
 
 ### Display order receipt
 
-The display order receipt featured will be displayed upon order completion. It includes all information which had been gathered throughout the process such as user name, delivery type, address and items order.
+This feature is displayed upon order completion. It includes all information which had been gathered throughout the process such as user name, delivery type, address and item ordered.
 
-[Display order receipt image]()
+<details>
+<summary>Display order receipt image</summary>
+<img src = "">
+</details>
 
 ### Delivery charge
 
-The delivery charge feature adds a delivery cost if the order is for delivery and adds nothing if it is for collection.
+This feature adds a delivery cost if the order is for delivery and adds nothing if it is for pickup.
 
-[Display delivery charge image]()
+<details>
+<summary>Display delivery charge image</summary>
+<img src = "">
+</details>
 
 ### Display order / delivery time
 
-The display order time and delivery/pickup time will be displayed on the order receipt.
+This feature displays the order time and delivery / pickup time on the order receipt.
 
-[Display delivery charge image]()
+<details>
+<summary>Display order / delivery time image</summary>
+<img src = "">
+</details>
 
 ### Quit
 
-The quit is a feature used throughout the app to allow the user to quit the app with a thank you message.
+This feature is used throughout the app to allow the user to quit the app with a thank you message.
 
-[Quit image]()
+<details>
+<summary>Quit image</summary>
+<img src = "">
+</details>
 
 ## Future implementations
 
@@ -325,6 +373,17 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 ### Clone a GitHub Repository
 
+I made a local clone of a repository via the following steps:
+
+  - Navigate to www.github.com and log in.
+  - Once logged in navigate to the desired [GitHub Repository](https://github.com/jyotiyadav2508/pizza-hub.git)
+  - Locate the code button at the top, above the repository file structure.
+  - Select the preferred clone method from HTTPS. SSH or GitHub CLI then click the copy button to copy the URL to my clipboard.
+  - Open Git terminal
+  - Type `git clone` and paste the previously copied URL. I copied HTTPS method.
+  - `$ clone https://github.com/jyotiyadav2508/pizza-hub.git`
+  - Now press enter and the local clone will be created at the local location.
+
 ## Credits
 
 ## Acknowledgements
@@ -332,7 +391,7 @@ PEP-8 Validation was used to validate the Python code used in the app.
 I would like to also thank the following:
   - My Husband for his support and help doing this project.
   - My Code Institute mentor Mr Sandeep Aggarwal for his guidance through this project.
-  - My fellow Code Institute students whom i have bounced ideas.
+  - My fellow Code Institute students from whom I got the project idea.
   - Code Institute tutor support who helped me with different issues while doing the project.
   
 
