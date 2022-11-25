@@ -212,12 +212,16 @@ def preview_order():
             display_menu_list()
             break
         elif preview_option.capitalize() == "C":
-            append_order_confirmation()
-            print(colored("\nLoading reciept....", "green"))
-            sleep(2)
-            clear_screen()
-            display_order_receipt()
-            break
+            local_user_data = get_individual_user_data()
+            if bool(local_user_data):
+                append_order_confirmation()
+                print(colored("\nLoading reciept....", "green"))
+                sleep(2)
+                clear_screen()
+                display_order_receipt()
+                break
+            else:
+                print(colored("\nNo item in the order list", "red"))
         elif preview_option.capitalize() == "Q":
             print(colored("\nThanks for visiting us!", "green"))
             sleep(2)
@@ -257,7 +261,7 @@ def remove_item(item):
             sleep(2)
             clear_screen()
     else:
-        print(colored("\nItem does not exist in the list", "red"))
+        print(colored("\nItem does not exist in the order list", "red"))
         sleep(2)
 
 
@@ -312,7 +316,7 @@ def display_order_receipt():
     pickup_time = pickup_time.strftime("%H:%M:%S  %d-%m-%Y")
     print(f"Order time: {order_time}\n")
     total_price = 0
-    delivery_charge = 5.00
+    delivery_charge = 5
     local_user_data = get_individual_user_data()
     for item in local_user_data:
         price = float(item[2].split("€")[1])
@@ -321,9 +325,7 @@ def display_order_receipt():
 
     tabulate_preview(local_user_data)
     if user_data[2] == "Home delivery":
-        print(
-            f"\nThere is a delivey charge of €{float(delivery_charge):.2f}"
-        )
+        print(colored(f"\nDelivey charge: €{float(delivery_charge):.2f}", "yellow"))
         display_total_price = "€" + str(total_price + delivery_charge)
         print(colored(
             f"Total price of your order: {display_total_price}", 'yellow'))
