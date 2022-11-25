@@ -359,9 +359,78 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 ## Testing
 
-### Manual testing
+### Site User Stories
 
-### Automated testing
+1. As a user, I want to be provided with clear instructions throughout the app.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+| All listed features in the Features section provide the user with feedback based on user input | As prompted, enter user input | User to be provided with positive and negative feedback based on user input | Works as expected |
+
+2. As a user, I should get an option to choose my order between pickup or home delivery.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+| Order type options | Enter desired order type by entering D for home delivery or p for pickup | If order type Home Delivery is selected, the address is asked for | Works as expected |
+
+3. As a user, I want to view a clear and well-structed menu.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+| Table formatted menu | Enter data when asked for name, address and delivery type | Menu and options to be displayed to the user  |Works as expected |
+
+4. As a user, I want to add an item to the order list. Additionally have the option to remove items from order list.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+| Add item to order list | Enter item number | User input item to be validated and added to the order list with confirmation message |Works as expected |
+| Remove item from order list | Enter item number | User input item to be validated and removed from the order list with confirmation message |Works as expected |
+
+5. As a user, I want to be able to preview my order.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+|  Preview the order list in table format  | Enter 'P' on menu page | User to be provided with a table of currently selected items for order with the following options:  remove item, add item, confirm order and quit |Works as expected |
+
+6. As a user, I want to be able to cancel an unplaced order.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+| Quit | Enter 'Q' |   |Works as expected  |
+
+7. As a user, I want to be able to see my order receipt.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+|  Order receipt | Enter user name, order type, add item to order list and then from preview page enter 'C' | A formatted page along with user details and order summary will be displayed |Works as expected  |
+
+8. As a user, I want to be able quit the app.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+| Quit | Enter 'Q' either from home page or menu page or preview page or receipt page | User exits the app | Works as expected |
+
+
+### Site Owner Stories
+
+1. As a site owner, I want users to be greeted with a welcome message to give the app a friendly experience.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+|  Welcome message    | Run the app   |  Welcome message to be displayed to the user   |Works as expected  |
+
+2. As a site owner, I want to save the user information and order data to a Google Sheets file.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+|  Welcome message    | Run the app   |  Welcome message to be displayed to the user   |Works as expected  |
+
+3. As a site owner, I want users to receive feedback based on their input.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+|  Welcome message    | Run the app   |  Welcome message to be displayed to the user   |Works as expected  |
+
 
 ## Bugs
 
@@ -413,7 +482,7 @@ This project was deployed to Heroku with following steps:
  
 10. Wait for the app to build and then click on the "View" link which leads to the deployed link.
 
-### Forking the GitHub Repository
+----
 
 ### Clone a GitHub Repository
 
