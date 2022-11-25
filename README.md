@@ -213,7 +213,7 @@ This project uses Object Orientated Programming to interact and manipulate the f
 The welcome message is featured on the home page and will greet users with a friendly message.
 
 <details>
-<summary>Welcomw message image</summary>
+<summary>Welcome message image</summary>
 <img src = "screenshots/features/home_page.jpg">
 </details>
 
@@ -371,7 +371,7 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-| Order type options | Enter desired order type by entering D for home delivery or p for pickup | If order type Home Delivery is selected, the address is asked for | Works as expected |
+| Order type options | Enter desired order type by entering D for home delivery or P for pickup | If order type Home Delivery is selected, the address is asked for | Works as expected |
 
 3. As a user, I want to view a clear and well-structed menu.
 
@@ -383,8 +383,8 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-| Add item to order list | Enter item number | User input item to be validated and added to the order list with confirmation message |Works as expected |
-| Remove item from order list | Enter item number | User input item to be validated and removed from the order list with confirmation message |Works as expected |
+| Add item to order list | Enter item number on menu page | User input item to be validated and added to the order list with confirmation message |Works as expected |
+| Remove item from order list | Enter item number on preview page | User input item to be validated and removed from the order list with confirmation message |Works as expected |
 
 5. As a user, I want to be able to preview my order.
 
@@ -402,7 +402,7 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-| Quit | Enter 'Q' either from home page or menu page or preview page or receipt page | A thanku message comes and user exits the app | Works as expected |
+| Quit | Enter 'Q' either from home page or menu page or preview page or receipt page | A thank you message comes and user exits the app | Works as expected |
 
 ----
 
@@ -418,21 +418,33 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-| Retrieve and Append data | To add item on menu page | Retrieve data from Google Sheets worksheet 'menu' and add all information entered during this process will be appended to a Google Sheets worksheet 'order_list' | Works as expected |
+| Retrieve data | Add user details on main page | Menu is tabulated after retrieving data from worksheet 'menu' | Works as expected |
+|Append user data | Add item on menu page | User data and order data provided by the user during the order process is appended to the worksheet 'order_list' | Works as expected |
 
 3. As a site owner, I want users to receive feedback based on their input.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-| Welcome message invalid input | Enter an invalid option at the Welcome screen  | User to be provided with feedback stating that Invalid input |Works as expected  |
-| Order type options | User input | Shows positive or negative feedback based on user input | Works as expected |
-| Menu | User input | Shows confirmation message for valid item and Invalid message for invalid input | Works as expected |
-| Preview order | Add item in order list and then click 'P' to go to preview | Preview page is shown when user inputs are valid otherwise show feedback based on user input | Works as expected |
-| Receipt | Confirm user order | Upon order completion a formatted page of order summary will be displayed to the user | Works as expected  |
-| Quit | Enter 'Q' | User exits the app with a thank you message | Works as expected |
+| Welcome message invalid input | Enter an invalid option on Welcome screen  | User to be provided with feedback about invalid input | Works as expected  |
+| Order type options | User input on main page | Shows positive or negative feedback based on user input | Works as expected |
+| Menu | User input on menu page | Shows confirmation message for valid input and invalid message for invalid input | Works as expected |
+| Preview order | Add an item in the order list and then enter 'P' to go to preview | Preview page is shown when user inputs are valid otherwise feedback is shown based on user input | Works as expected |
+| Receipt | Confirm user order on preview page | Upon order completion a formatted page of order summary is displayed | Works as expected  |
+| Quit | Enter 'Q' either on home page or menu page or preview page or receipt page  | User exits the app with a thank you message | Works as expected |
 
 
 ## Bugs
+
+| Bug     | Unfix       | 
+| --------| ------------| 
+| Sometimes remove item function doesn't remove the desired item on preview page. It works after 2-3 attempts |       |
+
+
+| Bug     | Fix       | 
+| --------| ------------| 
+| Append_order_confirmation function updates order status for only one item instead of all the items for the specific user in the worksheet 'order_list'  | Use findall function instead of find function for finding user specific order data  |
+| When multiple user order in parallel, the preview function displays items being ordered by all users instead of user specific items  |  Generate unique order id for each user and then search all items for specific order id to tabulate user specific order data for preview page  |
+| When user removes an item on preview page, the leftover items are appended to the previously added items in the order list  |  Instead of using global variable for retreiving individual user data, use local variable in get individual user data function to fetch current order data for individual user | 
 
 ## Deployment
 

@@ -231,12 +231,31 @@ def remove_item(item):
     """
     Remove an item when preview user's order
     """
-    cell = ORDER_LIST.find(str(item))
-    if cell is not None:
-        ORDER_LIST.delete_rows(cell.row)
-        print(colored("\nRemoving requested item...", "green"))
-        sleep(2)
-        clear_screen()
+
+    item_cell_list = ORDER_LIST.findall(str(item))
+    order_id_cell_list = ORDER_LIST.findall(str(order_data[0]))
+
+    order_id_index = []
+    for order_id_cell in order_id_cell_list:
+        order_id_index.append(order_id_cell.row)
+
+    item_index = []
+    for item_cell in item_cell_list:  
+        item_index.append(item_cell.row)
+
+    order_id_set = set(order_id_index)
+    item_set = set(item_index)
+
+    if (order_id_set & item_set):
+        remove_row_set = order_id_set & item_set
+        remove_row_list = list(remove_row_set)
+
+        for item in remove_row_list:
+
+            ORDER_LIST.delete_rows(item)
+            print(colored("\nRemoving requested item...", "green"))
+            sleep(2)
+            clear_screen()
     else:
         print(colored("\nItem does not exist in the list", "red"))
         sleep(2)
