@@ -27,7 +27,7 @@ SHEET = GSPREAD_CLIENT.open("pizza_hub")
 
 MENU = SHEET.worksheet("menu")
 ORDER_LIST = SHEET.worksheet("order_list")
-RECEIPT_LIST = SHEET.worksheet("receipt_lists")
+# RECEIPT_LIST = SHEET.worksheet("receipt_lists")
 MAX_MENU_ITEM = len(MENU.get_all_values())
 
 user_data = []
