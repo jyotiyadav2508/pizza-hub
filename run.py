@@ -76,7 +76,7 @@ def get_user_details():
     Get user name and order type
     """
     user_data.clear()
-    user_name = input("Enter your name: ")
+    user_name = input("Enter your name:\n")
     user_order_id = random.getrandbits(16)
     user_data.append(user_name)
     user_data.append(user_order_id)
@@ -98,7 +98,7 @@ def get_user_details():
                     f"Your selected delivery type is: {order_type}\n", "yellow"
                 )
             )
-            address = input("Enter your Address: ")
+            address = input("Enter your Address:\n")
             print(colored(f"\nYour provided address is {address}\n", "yellow"))
             user_data.append(address)
         elif delivery_type == "P":
@@ -135,7 +135,7 @@ def user_action():
     """
     item_number = 0
     while True:
-        user_choice = input("Enter your choice: ")
+        user_choice = input("Enter your choice:\n")
         if user_choice.isdigit():
             user_choice = int(user_choice)
             if (
@@ -191,7 +191,7 @@ def preview_order():
             tabulate_preview(local_user_data)
             print(PREVIEW_TEXT)
             i = False
-        preview_option = input("Enter your choice: ")
+        preview_option = input("Enter your choice:\n")
         if preview_option.isdigit():
             preview_option = int(preview_option)
             if (
@@ -322,7 +322,7 @@ def display_order_receipt():
             f"Your order will be ready for Pickup at {pickup_time}", 'yellow'))
     print(colored("\nThanks for your order. Enjoy your meal!", "green"))
     while True:
-        end = input("\nEnter Q to quit: ")
+        end = input("\nEnter Q to quit:\n")
         if end.capitalize() == "Q":
             clear_screen()
             print(colored("\nThanks for visiting us\n", 'yellow'))
@@ -339,7 +339,7 @@ def welcome():
     print(colored(pyfiglet.figlet_format(title), 'green'))
     print(colored(WELCOME_MSG, "yellow"))
     while True:
-        start_order = input("\nEnter your choice:")
+        start_order = input("\nEnter your choice:\n")
         if start_order.capitalize() == "Y":
             clear_screen()
             get_user_details()
