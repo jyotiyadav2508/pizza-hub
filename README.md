@@ -6,7 +6,7 @@ Developer: Jyoti Yadav
 
 The Pizza Hub website has been developed to provide users the chance to order Pizza for home delivery or pick-up via a command line based interface.
 
-![mockup image]()
+![mockup image](screenshots/features/mockup.jpg)
 
 
 ## Table of Contents
@@ -214,7 +214,7 @@ The welcome message is featured on the home page and will greet users with a fri
 
 <details>
 <summary>Welcomw message image</summary>
-<img src = "">
+<img src = "screenshots/features/home_page.jpg">
 </details>
 
 ### Welcome message invalid input feedback
@@ -223,25 +223,25 @@ The welcome message invalid input feedback is featured on the welcome page and w
 
 <details>
 <summary>Welcome message invalid input image</summary>
-<img src = "">
+<img src = "screenshots/features/home_page_invalid_msg.jpg">
 </details>
 
-### User Name
+### User Name and Delivery Type Option
 
-This page asks users to provide their name.
+This page asks users to provide their name. Once user provides the name, a welcome message displayed with user's name and delivery type options. One option is for home delivery and another is for pickup. Pickup will auto populate the address as 'The Pizza Hub'. For home delivery, customers will be asked to enter their address.
 
 <details>
 <summary>User details image</summary>
-<img src = "">
+<img src = "screenshots/features/user_details.jpg">
 </details>
 
-### Delivery Type Options
+### Invalid delivery type feedback
 
-There are two delivery type options, one for home delivery and another for pickup. Pickup will auto populate the address as 'The Pizza Hub'. For home delivery, customers will be asked to enter their address.
+If user input is other than 'D' and 'P', a invalid delivery type feedback is displayed.
 
 <details>
 <summary>delivery type image</summary>
-<img src = "">
+<img src = "screenshots/features/invalid_delivery_type.jpg">
 </details>
 
  ### Menu
@@ -250,7 +250,7 @@ The Menu feature will display a tabulated format of all items available for orde
 
 <details>
 <summary>Menu img</summary>
-<img src = "">
+<img src = "screenshots/features/menu.jpg">
 </details>
 
 ### Add item to order
@@ -259,16 +259,16 @@ The Add item to order feature on the Menu page allows users to add an item to th
 
 <details>
 <summary>Add item to order image</summary>
-<img src = "">
+<img src = "screenshots/features/add_item.jpg">
 </details>
 
-### Invalid item from order
+### Invalid item for order
 
 The Invalid item feature on the Menu page warns users that their previously entered input is not valid.
 
 <details>
 <summary>Invalid food item number image</summary>
-<img src = "">
+<img src = "screenshots/features/invalid_item.jpg">
 </details>
 
 ### Empty order list warning
@@ -277,7 +277,7 @@ The empty order list warning feature on the Menu page will warn users that their
 
 <details>
 <summary>Empty list warning image</summary>
-<img src = "">
+<img src = "screenshots/features/empty_list_msg.jpg">
 </details>
 
 ### Preview order
@@ -286,16 +286,16 @@ The preview order feature on the Menu page allows users to preview the items cur
 
 <details>
 <summary>Preview order image</summary>
-<img src = "">
+<img src = "screenshots/features/order_preview.jpg">
 </details>
 
-### Remove itam
+### Remove item
 
 The remove item feature on the preview page allows users to remove any selected item from user's order list.
 
 <details>
 <summary>Remove item image</summary>
-<img src = "">
+<img src = "screenshots/features/removing_item.jpg">
 </details>
 
 ### Confirm order
@@ -304,7 +304,7 @@ The confirm order is a feature that will allow users to confirm the order and al
 
 <details>
 <summary>Confirmation order image</summary>
-<img src = "">
+<img src = "screenshots/features/confirmation_order.jpg">
 </details>
 
 
@@ -314,7 +314,7 @@ This feature is displayed upon order completion. It includes all information whi
 
 <details>
 <summary>Display order receipt image</summary>
-<img src = "">
+<img src = "screenshots/features/receipt.jpg">
 </details>
 
 ### Delivery charge
@@ -323,7 +323,7 @@ This feature adds a delivery cost if the order is for delivery and adds nothing 
 
 <details>
 <summary>Display delivery charge image</summary>
-<img src = "">
+<img src = "screenshots/features/delivery_charge.jpg">
 </details>
 
 ### Display order / delivery time
@@ -332,7 +332,7 @@ This feature displays the order time and delivery / pickup time on the order rec
 
 <details>
 <summary>Display order / delivery time image</summary>
-<img src = "">
+<img src = "screenshots/features/receipt.jpg">
 </details>
 
 ### Quit
@@ -341,7 +341,7 @@ This feature is used throughout the app to allow the user to quit the app with a
 
 <details>
 <summary>Quit image</summary>
-<img src = "">
+<img src = "screenshots/features/thanks_msg.jpg">
 </details>
 
 ## Future implementations
@@ -354,7 +354,7 @@ Payment type
 PEP-8 Validation was used to validate the Python code used in the app.
 
 <details><summary>Python file - run.py</summary>
-<img src="">
+<img src="screenshots/validation/pizza_hub_pep8.jpg">
 </details>
 
 ## Testing
@@ -392,24 +392,19 @@ PEP-8 Validation was used to validate the Python code used in the app.
 | ------------- | ------------- | -------------    | ------------- |
 |  Preview the order list in table format  | Enter 'P' on menu page | User to be provided with a table of currently selected items for order with the following options:  remove item, add item, confirm order and quit |Works as expected |
 
-6. As a user, I want to be able to cancel an unplaced order.
-
-| Feature       | Action        | Expected Result  | Actual Result |
-| ------------- | ------------- | -------------    | ------------- |
-| Quit | Enter 'Q' |   |Works as expected  |
-
-7. As a user, I want to be able to see my order receipt.
+6. As a user, I want to be able to see my order receipt.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
 |  Order receipt | Enter user name, order type, add item to order list and then from preview page enter 'C' | A formatted page along with user details and order summary will be displayed |Works as expected  |
 
-8. As a user, I want to be able quit the app.
+7. As a user, I want to be able quit the app.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
 | Quit | Enter 'Q' either from home page or menu page or preview page or receipt page | A thanku message comes and user exits the app | Works as expected |
 
+----
 
 ### Site Owner Stories
 
@@ -424,8 +419,6 @@ PEP-8 Validation was used to validate the Python code used in the app.
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
 | Retrieve and Append data | To add item on menu page | Retrieve data from Google Sheets worksheet 'menu' and add all information entered during this process will be appended to a Google Sheets worksheet 'order_list' | Works as expected |
-
-
 
 3. As a site owner, I want users to receive feedback based on their input.
 
