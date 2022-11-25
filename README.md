@@ -344,11 +344,6 @@ This feature is used throughout the app to allow the user to quit the app with a
 <img src = "screenshots/features/thanks_msg.jpg">
 </details>
 
-## Future implementations
-
-In the future as my skills grow I would like to implement class method. 
-Payment type 
-
 ## Python Validation
 
 PEP-8 Validation was used to validate the Python code used in the app.
@@ -434,11 +429,6 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 
 ## Bugs
-
-| Bug     | Fix       | 
-| --------| ------------| 
-| |       |
-
 
 | Bug     | Fix       | 
 | --------| ------------| 
