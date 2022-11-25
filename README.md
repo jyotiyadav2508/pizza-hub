@@ -1,4 +1,4 @@
-# Pizza Hub
+# The Pizza Hub
 
 Developer: Jyoti Yadav
 
@@ -408,7 +408,7 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-| Quit | Enter 'Q' either from home page or menu page or preview page or receipt page | User exits the app | Works as expected |
+| Quit | Enter 'Q' either from home page or menu page or preview page or receipt page | A thanku message comes and user exits the app | Works as expected |
 
 
 ### Site Owner Stories
@@ -417,19 +417,26 @@ PEP-8 Validation was used to validate the Python code used in the app.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-|  Welcome message    | Run the app   |  Welcome message to be displayed to the user   |Works as expected  |
+|  Welcome message  | Run the app   | Title of website and welcome message to be displayed  |Works as expected  |
 
 2. As a site owner, I want to save the user information and order data to a Google Sheets file.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-|  Welcome message    | Run the app   |  Welcome message to be displayed to the user   |Works as expected  |
+| Retrieve and Append data | To add item on menu page | Retrieve data from Google Sheets worksheet 'menu' and add all information entered during this process will be appended to a Google Sheets worksheet 'order_list' | Works as expected |
+
+
 
 3. As a site owner, I want users to receive feedback based on their input.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
-|  Welcome message    | Run the app   |  Welcome message to be displayed to the user   |Works as expected  |
+| Welcome message invalid input | Enter an invalid option at the Welcome screen  | User to be provided with feedback stating that Invalid input |Works as expected  |
+| Order type options | User input | Shows positive or negative feedback based on user input | Works as expected |
+| Menu | User input | Shows confirmation message for valid item and Invalid message for invalid input | Works as expected |
+| Preview order | Add item in order list and then click 'P' to go to preview | Preview page is shown when user inputs are valid otherwise show feedback based on user input | Works as expected |
+| Receipt | Confirm user order | Upon order completion a formatted page of order summary will be displayed to the user | Works as expected  |
+| Quit | Enter 'Q' | User exits the app with a thank you message | Works as expected |
 
 
 ## Bugs
