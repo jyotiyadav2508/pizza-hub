@@ -2,7 +2,7 @@
 
 Developer: Jyoti Yadav
 
-The live link of website- ![Live Link]() (#top)
+The live link of website- ![Live Link](#top)(https://the-pizza-hub.herokuapp.com/)
 
 The Pizza Hub website has been developed to provide users the chance to order Pizza for home delivery or pick-up via a command line based interface.
 
