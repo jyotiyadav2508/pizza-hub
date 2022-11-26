@@ -27,7 +27,9 @@ SHEET = GSPREAD_CLIENT.open("pizza_hub")
 
 MENU = SHEET.worksheet("menu")
 ORDER_LIST = SHEET.worksheet("order_list")
-MAX_MENU_ITEM = len(MENU.get_all_values())
+
+# Reduce the header and formatting row.
+# MAX_MENU_ITEM = len(MENU.get_all_values()) - 2
 
 user_data = []
 order_data = []
@@ -74,8 +76,12 @@ def tabulate_preview(user_info):
     """
     Formate order preview in table form
     """
-    formatted_preview = tabulate(user_info, headers=[
-        "Item", "Name", "Price"], tablefmt="simple", numalign="center")
+    formatted_preview = tabulate(
+        user_info,
+        headers=["Item", "Name", "Price"],
+        tablefmt="simple",
+        numalign="center",
+    )
     print(formatted_preview)
 
 
@@ -119,11 +125,17 @@ def display_order_receipt():
 
     tabulate_preview(local_user_data)
     if user_data[2] == "Home delivery":
-        print(colored(
-            f"\nDelivey charge: €{float(delivery_charge):.2f}", "yellow"))
+        print(
+            colored(
+                f"\nDelivey charge: €{float(delivery_charge):.2f}", "yellow"
+            )
+        )
         display_total_price = "€" + str(total_price + delivery_charge)
-        print(colored(
-            f"Total price of your order: {display_total_price}", 'yellow'))
+        print(
+            colored(
+                f"Total price of your order: {display_total_price}", "yellow"
+            )
+        )
     else:
         print(
             colored(
@@ -131,30 +143,40 @@ def display_order_receipt():
             )
         )
     if user_data[1] == "Home delivery":
-        print(colored(
-            f"Your order will be delivered at {delivery_time}\n", 'yellow'))
+        print(
+            colored(
+                f"Your order will be delivered at {delivery_time}\n", "yellow"
+            )
+        )
     else:
-        print(colored(
-            f"Your order will be ready for Pickup at {pickup_time}", 'yellow'))
+        print(
+            colored(
+                f"Your order will be ready for Pickup at {pickup_time}",
+                "yellow",
+            )
+        )
     print(colored("\nThanks for your order. Enjoy your meal!", "green"))
     while True:
         end = input("\nEnter Q to quit:\n")
         if end.capitalize() == "Q":
             clear_screen()
-            print(colored("\nThanks for visiting us!\n", 'yellow'))
+            print(colored("\nThanks for visiting us!\n", "yellow"))
             sleep(2)
             clear_screen()
             break
 
 
-def append_order_confirmation():
+def append_order_status(order_request):
     """
     Update order status in gspread when user confirmed his order
     """
     cells_list = ORDER_LIST.findall(str(order_data[0]))
     for cell in cells_list:
-        confirmation_cell = 'H' + str(cell.row)
-        ORDER_LIST.update(confirmation_cell, 'Confirmed')
+        confirmation_cell = "H" + str(cell.row)
+        if order_request.capitalize() == "C":
+            ORDER_LIST.update(confirmation_cell, "Confirmed")
+        elif order_request.capitalize() == "Q":
+            ORDER_LIST.update(confirmation_cell, "Cancelled")
 
 
 def remove_item(item):
@@ -178,7 +200,7 @@ def remove_item(item):
     if order_id_set & item_set:
         remove_row_set = order_id_set & item_set
         remove_row_list = list(remove_row_set)
-    # Remove the desired row from worksheet
+        # Remove the desired row from worksheet
         for item in remove_row_list:
             ORDER_LIST.delete_rows(item)
             print(colored("\nRemoving requested item...", "green"))
@@ -204,9 +226,8 @@ def preview_order():
         preview_option = input("Enter your choice:\n")
         if preview_option.isdigit():
             preview_option = int(preview_option)
-            if (
-                (preview_option) >= 1
-                and (preview_option) <= len(MENU.get_all_values())
+            if (preview_option) >= 1 and (preview_option) <= len(
+                MENU.get_all_values()
             ):
                 remove_item(preview_option)
                 local_user_data = get_individual_user_data()
@@ -214,15 +235,9 @@ def preview_order():
                 tabulate_preview(local_user_data)
                 print(PREVIEW_TEXT)
             else:
-                print(
-                    colored(
-                        "\nInvalid item number\n", "red"
-                        )
-                    )
+                print(colored("\nInvalid item number\n", "red"))
         elif preview_option.capitalize() == "A":
-            print(colored(
-                "\nLoading menu page....", "green"
-                ))
+            print(colored("\nLoading menu page....", "green"))
             sleep(2)
             clear_screen()
             display_menu_list()
@@ -230,12 +245,8 @@ def preview_order():
         elif preview_option.capitalize() == "C":
             local_user_data = get_individual_user_data()
             if bool(local_user_data):
-                append_order_confirmation()
-                print(
-                    colored(
-                        "\nLoading reciept....", "green"
-                        )
-                    )
+                append_order_status(preview_option)
+                print(colored("\nLoading reciept....", "green"))
                 sleep(2)
                 clear_screen()
                 display_order_receipt()
@@ -243,11 +254,8 @@ def preview_order():
             else:
                 print(colored("\nNo item in the order list", "red"))
         elif preview_option.capitalize() == "Q":
-            print(
-                colored(
-                    "\nThanks for visiting us!", "green"
-                    )
-                )
+            append_order_status(preview_option)
+            print(colored("\nThanks for visiting us!", "green"))
             sleep(2)
             clear_screen()
             break
@@ -273,12 +281,11 @@ def user_action():
         user_choice = input("Enter your choice:\n")
         if user_choice.isdigit():
             user_choice = int(user_choice)
-            if (
-                user_choice >= 1
-                and user_choice <= len(MENU.get_all_values())
+            if user_choice >= 1 and user_choice <= (
+                len(MENU.get_all_values()) - 2
             ):
-                # item_number = user_choice
-                add_item(user_choice)
+                item_number = user_choice
+                add_item(item_number)
                 print(
                     colored(
                         "\nSelected item added to your order list", "yellow"
@@ -292,20 +299,19 @@ def user_action():
                 )
         elif user_choice.capitalize() == "P":
             if item_number == 0:
-                print(colored(
-                    "Your order list is empty. Please add item.\n", 'yellow'
+                print(
+                    colored(
+                        "Order list is empty. Please add an item.\n", "yellow"
                     )
                 )
             else:
-                print(colored(
-                    "\nLoading preview page....", "green"
-                    ))
+                print(colored("\nLoading preview page....", "green"))
                 sleep(2)
                 clear_screen()
                 preview_order()
                 break
         elif user_choice.capitalize() == "Q":
-            print(colored("\nThanks for visiting us!\n", 'yellow'))
+            print(colored("\nThanks for visiting us!\n", "yellow"))
             sleep(2)
             clear_screen()
             break
@@ -337,9 +343,7 @@ def get_user_details():
     order_data.append(user_order_id)
     print(colored(f"\nWelcome {user_name}!\n", "yellow"))
     while True:
-        delivery_type = input(
-            ORDER_OPTION_MSG
-        ).capitalize()
+        delivery_type = input(ORDER_OPTION_MSG).capitalize()
         if delivery_type not in ("D", "P"):
             print(colored("\nInvalid delivery type. Try again.\n", "red"))
             continue
@@ -348,24 +352,16 @@ def get_user_details():
             order_type = "Home delivery"
             user_data.append(order_type)
             print(
-                colored(
-                    f"Selected delivery type is: {order_type}\n", "yellow"
-                )
+                colored(f"Selected delivery type is: {order_type}\n", "yellow")
             )
             address = input("Enter your Address:\n")
-            print(
-                colored(
-                    f"\nYour provided address is {address}\n", "yellow"
-                )
-            )
+            print(colored(f"\nYour provided address is {address}\n", "yellow"))
             user_data.append(address)
         elif delivery_type == "P":
             order_type = "Pickup"
             user_data.append(order_type)
             print(
-                colored(
-                    f"\nSelected delivery type is: {order_type}", "yellow"
-                )
+                colored(f"\nSelected delivery type is: {order_type}", "yellow")
             )
             user_data.append("The Pizza Hub")
 
@@ -380,8 +376,8 @@ def welcome():
     """
     Function to display home page
     """
-    title = 'The Pizza Hub'
-    print(colored(pyfiglet.figlet_format(title), 'green'))
+    title = "The Pizza Hub"
+    print(colored(pyfiglet.figlet_format(title), "green"))
     print(colored(WELCOME_MSG, "yellow"))
     while True:
         start_order = input("\nEnter your choice:\n")
@@ -390,14 +386,12 @@ def welcome():
             get_user_details()
             break
         elif start_order.capitalize() == "N":
-            print(colored("\nThanks for visiting us!\n", 'yellow'))
+            print(colored("\nThanks for visiting us!\n", "yellow"))
             sleep(2)
             clear_screen()
             break
         else:
-            print(
-                colored("Invalid input. Enter Y to start.\n", "red")
-            )
+            print(colored("Invalid input. Enter Y to start.\n", "red"))
 
 
 if __name__ == "__main__":

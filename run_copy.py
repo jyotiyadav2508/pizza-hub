@@ -82,9 +82,7 @@ def get_user_details():
     order_data.append(user_order_id)
     print(colored(f"\nWelcome {user_name}!\n", "yellow"))
     while True:
-        delivery_type = input(
-            ORDER_OPTION_MSG
-        ).capitalize()
+        delivery_type = input(ORDER_OPTION_MSG).capitalize()
         if delivery_type not in ("D", "P"):
             print(colored("\nInvalid delivery type. Try again.\n", "red"))
             continue
@@ -141,10 +139,7 @@ def user_action():
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit():
             user_choice = int(user_choice)
-            if (
-                user_choice >= 1
-                and user_choice <= len(MENU.get_all_values())
-            ):
+            if user_choice >= 1 and user_choice <= len(MENU.get_all_values()):
                 item_number = user_choice
                 add_item(item_number)
                 print(
@@ -156,9 +151,10 @@ def user_action():
                 print(colored("\nItem doesn't exist in the menu.\n", "red"))
         elif user_choice.capitalize() == "P":
             if item_number == 0:
-                print(colored(
-                    "Your list is empty. Please add items.\n", 'yellow'))
-                
+                print(
+                    colored("Your list is empty. Please add items.\n", "yellow")
+                )
+
             else:
                 print(colored("\nLoading preview page....", "green"))
                 sleep(2)
@@ -166,7 +162,7 @@ def user_action():
                 preview_order()
                 break
         elif user_choice.capitalize() == "Q":
-            print(colored("\nThanks for visiting us\n", 'yellow'))
+            print(colored("\nThanks for visiting us\n", "yellow"))
             sleep(2)
             clear_screen()
             break
@@ -196,7 +192,7 @@ def preview_order():
     #         if item == str(order_data[0]):
     #             row.pop(7)
     #             del row[0:4]
-                
+
     #             individual_user_data.append(row)
     #     print(individual_user_data)
     #     tabulate_preview(individual_user_data)
@@ -207,7 +203,7 @@ def preview_order():
         #         if item == str(order_data[0]):
         #             row.pop(7)
         #             del row[0:4]
-                    
+
         #             individual_user_data.append(row)
         # print(individual_user_data)
         # tabulate_preview(individual_user_data)
@@ -223,13 +219,12 @@ def preview_order():
             print(PREVIEW_TEXT)
             i = False
         # clear_screen()
-        
+
         preview_option = input("Enter your choice: ")
         if preview_option.isdigit():
             preview_option = int(preview_option)
-            if (
-                (preview_option) >= 1
-                and (preview_option) <= len(MENU.get_all_values())
+            if (preview_option) >= 1 and (preview_option) <= len(
+                MENU.get_all_values()
             ):
                 remove_item(preview_option)
                 local_user_data = get_individual_user_data()
@@ -283,8 +278,12 @@ def remove_item(item):
 
 def tabulate_preview(user_info):
     print(colored("------Order Preview------\n", "cyan"))
-    formatted_preview = tabulate(user_info, headers=["Item", "Name", "Price"],  
-                                tablefmt="simple", numalign="center")
+    formatted_preview = tabulate(
+        user_info,
+        headers=["Item", "Name", "Price"],
+        tablefmt="simple",
+        numalign="center",
+    )
     print(formatted_preview)
 
 
@@ -309,17 +308,16 @@ def append_order_confirmation():
     # print(cells_list)
     for cell in cells_list:
         # print(cell)
-        confirmation_cell = 'H' + str(cell.row)
-        ORDER_LIST.update(confirmation_cell, 'Confirmed')
+        confirmation_cell = "H" + str(cell.row)
+        ORDER_LIST.update(confirmation_cell, "Confirmed")
         # print(confirmation_cell)
         # confirmation_cell.value = 'Confirmed'
     # ORDER_LIST.update_cells(cells_list)
 
-
     # i = 0
     # while i < len(ORDER_LIST.get_all_values()):
     #     cell = ORDER_LIST.findall(str(order_data[0]))
-    #     if 
+    #     if
     #     ORDER_LIST.update_cells(('H' + str(cell.row)), 'Confirmed')
     #     i += 1
 
@@ -330,18 +328,17 @@ def append_order_confirmation():
     #         if item == str(order_data[0]):
     #             row[7] = 'Confirmed'
     #     ORDER_LIST.append_row(row)
-            # cell = ORDER_LIST.find(str(order_data[0]))
-            # ORDER_LIST.update(('H' + str(cell.row)), 'Confirmed')
-        # i += 1
-        # print(cell)
-    
+    # cell = ORDER_LIST.find(str(order_data[0]))
+    # ORDER_LIST.update(('H' + str(cell.row)), 'Confirmed')
+    # i += 1
+    # print(cell)
 
-        # for item in row:
+    # for item in row:
 
-        # # item = item + ["Confirmed"]
-        # item.append("Confirmed")
-        # print(item)
-        # print(individual_user_data)
+    # # item = item + ["Confirmed"]
+    # item.append("Confirmed")
+    # print(item)
+    # print(individual_user_data)
 
 
 def display_order_receipt():
@@ -367,7 +364,7 @@ def display_order_receipt():
     #             del row[0:4]
     #             individual_user_receipt.append(row)
     #             print(individual_user_receipt)
-    
+
     # price = ORDER_LIST.col_values(3)
     total_price = 0
     delivery_charge = 5.00
@@ -389,12 +386,13 @@ def display_order_receipt():
     # )
     # print(display_total_price)
     if user_data[2] == "Home delivery":
-        print(
-            f"\nThere is a delivey charge of €{float(delivery_charge):.2f}"
-        )
+        print(f"\nThere is a delivey charge of €{float(delivery_charge):.2f}")
         display_total_price = "€" + str(total_price + delivery_charge)
-        print(colored(
-            f"Total price of your order: {display_total_price}", 'yellow'))
+        print(
+            colored(
+                f"Total price of your order: {display_total_price}", "yellow"
+            )
+        )
     else:
         print(
             colored(
@@ -402,21 +400,27 @@ def display_order_receipt():
             )
         )
     if user_data[1] == "Home delivery":
-        print(colored(
-            f"Your order will be delivered at {delivery_time}\n", 'yellow'))
+        print(
+            colored(
+                f"Your order will be delivered at {delivery_time}\n", "yellow"
+            )
+        )
     else:
-        print(colored(
-            f"Your order will be ready for Pickup at {pickup_time}", 'yellow'))
+        print(
+            colored(
+                f"Your order will be ready for Pickup at {pickup_time}",
+                "yellow",
+            )
+        )
     print(colored("\nThanks for your order. Enjoy your meal!", "green"))
     while True:
         end = input("\nEnter Q to quit: ")
         if end.capitalize() == "Q":
             clear_screen()
-            print(colored("\nThanks for visiting us\n", 'yellow'))
+            print(colored("\nThanks for visiting us\n", "yellow"))
             sleep(2)
             clear_screen()
             break
-        
 
     # i = 0
     # while i < len(individual_user_data):
@@ -452,14 +456,12 @@ def welcome():
             get_user_details()
             break
         elif start_order.capitalize() == "N":
-            print(colored("\nThanks for visiting us\n", 'yellow'))
+            print(colored("\nThanks for visiting us\n", "yellow"))
             sleep(2)
             clear_screen()
             break
         else:
-            print(
-                colored("Invalid input. Enter Y to start.\n", "red")
-            )
+            print(colored("Invalid input. Enter Y to start.\n", "red"))
 
 
 if __name__ == "__main__":

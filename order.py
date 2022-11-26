@@ -85,9 +85,7 @@ def get_user_details():
     order_data.append(user_order_id)
     print(colored(f"\nWelcome {user_name}!\n", "cyan"))
     while True:
-        delivery_type = input(
-            ORDER_OPTION_MSG
-        ).capitalize()
+        delivery_type = input(ORDER_OPTION_MSG).capitalize()
         if delivery_type not in ("D", "P"):
             print(colored("\nInvalid delivery type. Try again.\n", "red"))
             continue
@@ -142,10 +140,7 @@ def user_action():
         user_choice = input("Enter your choice: ")
         if user_choice.isdigit():
             user_choice = int(user_choice)
-            if (
-                user_choice >= 1
-                and user_choice <= len(MENU.get_all_values())
-            ):
+            if user_choice >= 1 and user_choice <= len(MENU.get_all_values()):
                 item_number = user_choice
                 add_item(item_number)
                 print(
@@ -195,7 +190,7 @@ def preview_order():
             individual_user_id_row,
             headers=["Item", "Name", "Price", "order Id"],
             tablefmt="simple",
-            numalign="center"
+            numalign="center",
         )
         print(formatted_preview)
         print(PREVIEW_TEXT)
@@ -203,9 +198,8 @@ def preview_order():
         preview_option = input("Enter your choice: ")
         if preview_option.isdigit():
             preview_option = int(preview_option)
-            if (
-                (preview_option) >= 1
-                and (preview_option) <= len(MENU.get_all_values)
+            if (preview_option) >= 1 and (preview_option) <= len(
+                MENU.get_all_values
             ):
                 cell = ORDER_LIST.find(preview_option)
                 if cell is not None:
@@ -261,7 +255,7 @@ def display_order_receipt():
             if item == str(order_data[0]):
                 row.pop(3)
                 individual_user_receipt.append(row)
-    
+
     # price = ORDER_LIST.col_values(3)
     total_price = 0
     delivery_charge = 5.00
@@ -274,17 +268,21 @@ def display_order_receipt():
             individual_user_receipt,
             headers=["Item", "Name", "Price"],
             tablefmt="simple",
-            numalign="center"
+            numalign="center",
         )
     )
     if user_data[2] == "Home delivery":
         print(
             colored(
-                f"\nThere is a delivey charge of €{float(delivery_charge):.2f}")
+                f"\nThere is a delivey charge of €{float(delivery_charge):.2f}"
+            )
         )
         display_total_price = "€" + str(total_price + delivery_charge)
-        print(colored(
-            f"Total price of your order: {display_total_price}", 'yellow'))
+        print(
+            colored(
+                f"Total price of your order: {display_total_price}", "yellow"
+            )
+        )
     else:
         print(
             colored(
@@ -292,11 +290,18 @@ def display_order_receipt():
             )
         )
     if user_data[1] == "Home delivery":
-        print(colored(
-            f"Your order will be delivered at {delivery_time}\n", 'yellow'))
+        print(
+            colored(
+                f"Your order will be delivered at {delivery_time}\n", "yellow"
+            )
+        )
     else:
-        print(colored(
-            f"Your order will be ready for Pickup at {pickup_time}", 'yellow'))
+        print(
+            colored(
+                f"Your order will be ready for Pickup at {pickup_time}",
+                "yellow",
+            )
+        )
     print(colored("\nThanks for your order. Enjoy your meal!\n", "green"))
     i = 0
     while i < len(individual_user_receipt):
@@ -328,9 +333,7 @@ def welcome():
         elif start_order.capitalize() == "N":
             break
         else:
-            print(
-                colored("Invalid input. Enter Y to start.\n", "red")
-            )
+            print(colored("Invalid input. Enter Y to start.\n", "red"))
 
 
 if __name__ == "__main__":
