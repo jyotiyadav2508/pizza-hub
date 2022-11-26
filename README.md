@@ -6,7 +6,7 @@ Developer: Jyoti Yadav
 
 The Pizza Hub website has been developed to provide users the chance to order Pizza for home delivery or pick-up via a command line based interface.
 
-![mockup image](screenshots/features/mockup.jpg)
+![mockup image](screenshots/flowchart&mockup/pizza_hub_mockup.jpg)
 
 
 ## Table of Contents
@@ -154,7 +154,7 @@ This app was designed using Code Institutes Python Essentials Template. The temp
 
 The following flowchart was created to help identify functions that would be required in the Python files.
 <details><summary>Overview</summary>
-<img src="">
+<img src="screenshots/flowchart&mockup/pizza_hub_flowchart.jpeg">
 </details>
 
 ### Data Models
@@ -176,7 +176,6 @@ The following flowchart was created to help identify functions that would be req
  - GitHub - Used to deploy the projects code.
  - Gitpod - Used to develop and test code.
  - [lucidchart](https://www.lucidchart.com/) Used to create the project flow.
- - LibreOffice Draw - Used to create the flowchart.
  - Google Sheets - Used to store data outside of the program with the User data, food menu and sales records stored on separate worksheets.
  - Google Cloud Platform - Used to manage access permissions to google services such as google autho and google sheets.
  - Heroku Platform - Used to deploy the live project.
@@ -503,14 +502,12 @@ I made a local clone of a repository via the following steps:
   - `$ clone https://github.com/jyotiyadav2508/pizza-hub.git`
   - Now press enter and the local clone will be created at the local location.
 
-## Credits
-
 ## Acknowledgements
 
 I would like to also thank the following:
   - My Code Institute mentor Mr Sandeep Aggarwal for his guidance through this project.
   - My fellow Code Institute students from whom I got the project idea.
-  - My Husband for his support and help in debugging.
+  - My Husband for his support in debugging.
   - Code Institute tutor support who helped me with different issues while doing the project.
   
 
