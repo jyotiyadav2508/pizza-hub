@@ -311,6 +311,7 @@ def user_action():
                 preview_order()
                 break
         elif user_choice.capitalize() == "Q":
+            append_order_status(user_choice)
             print(colored("\nThanks for visiting us!\n", "yellow"))
             sleep(2)
             clear_screen()
