@@ -201,7 +201,7 @@ The following flowchart was created to help identify functions that would be req
 
 ### Existing features
 
-### Welcome message
+#### Welcome message
 
 The welcome message is featured on the home page and will greet users with a friendly message.
 
@@ -210,7 +210,7 @@ The welcome message is featured on the home page and will greet users with a fri
 <img src = "screenshots/features/home_page.jpg">
 </details>
 
-### Welcome message invalid input feedback
+#### Welcome message invalid input feedback
 
 The welcome message invalid input feedback is featured on the welcome page and will alert users of an invalid option entry.
 
@@ -219,7 +219,7 @@ The welcome message invalid input feedback is featured on the welcome page and w
 <img src = "screenshots/features/home_page_invalid_msg.jpg">
 </details>
 
-### User Name and Delivery Type Option
+#### User Name and Delivery Type Option
 
 This page asks users to provide their name. Once user provides the name, a welcome message displayed with user's name and delivery type options. One option is for home delivery and another is for pickup. Pickup will auto populate the address as 'The Pizza Hub'. For home delivery, customers will be asked to enter their address.
 
@@ -228,7 +228,7 @@ This page asks users to provide their name. Once user provides the name, a welco
 <img src = "screenshots/features/user_details.jpg">
 </details>
 
-### Invalid delivery type feedback
+#### Invalid delivery type feedback
 
 If user input is other than 'D' and 'P', a invalid delivery type feedback is displayed.
 
@@ -237,7 +237,7 @@ If user input is other than 'D' and 'P', a invalid delivery type feedback is dis
 <img src = "screenshots/features/invalid_delivery_type.jpg">
 </details>
 
- ### Menu
+#### Menu
  
 The Menu feature will display a tabulated format of all items available for order. The menu has three options: Add item, preview order, quit.
 
@@ -246,7 +246,7 @@ The Menu feature will display a tabulated format of all items available for orde
 <img src = "screenshots/features/menu.jpg">
 </details>
 
-### Add item to order
+#### Add item to order
 
 The Add item to order feature on the Menu page allows users to add an item to their order by typing the relevant item number as displayed on the menu.
 
@@ -255,7 +255,7 @@ The Add item to order feature on the Menu page allows users to add an item to th
 <img src = "screenshots/features/add_item.jpg">
 </details>
 
-### Invalid item for order
+#### Invalid item for order
 
 The Invalid item feature on the Menu page warns users that their previously entered input is not valid.
 
@@ -264,7 +264,7 @@ The Invalid item feature on the Menu page warns users that their previously ente
 <img src = "screenshots/features/invalid_item.jpg">
 </details>
 
-### Empty order list warning
+#### Empty order list warning
 
 The empty order list warning feature on the Menu page will warn users that their order list is empty, therefore no preview is possible.
 
@@ -273,7 +273,7 @@ The empty order list warning feature on the Menu page will warn users that their
 <img src = "screenshots/features/empty_list_msg.jpg">
 </details>
 
-### Preview order
+#### Preview order
 
 The preview order feature on the Menu page allows users to preview the items currently added to their order.
 
@@ -282,7 +282,7 @@ The preview order feature on the Menu page allows users to preview the items cur
 <img src = "screenshots/features/order_preview.jpg">
 </details>
 
-### Remove item
+#### Remove item
 
 The remove item feature on the preview page allows users to remove any selected item from user's order list.
 
@@ -291,7 +291,7 @@ The remove item feature on the preview page allows users to remove any selected 
 <img src = "screenshots/features/removing_item.jpg">
 </details>
 
-### Confirm order
+#### Confirm order
 
 The confirm order is a feature that will allow users to confirm the order and allows us to generate the receipt.
 
@@ -301,7 +301,7 @@ The confirm order is a feature that will allow users to confirm the order and al
 </details>
 
 
-### Display order receipt
+#### Display order receipt
 
 This feature is displayed upon order completion. It includes all information which had been gathered throughout the process such as user name, delivery type, address and item ordered.
 
@@ -310,7 +310,7 @@ This feature is displayed upon order completion. It includes all information whi
 <img src = "screenshots/features/receipt.jpg">
 </details>
 
-### Delivery charge
+#### Delivery charge
 
 This feature adds a delivery cost if the order is for delivery and adds nothing if it is for pickup.
 
@@ -319,7 +319,7 @@ This feature adds a delivery cost if the order is for delivery and adds nothing 
 <img src = "screenshots/features/delivery_charge.jpg">
 </details>
 
-### Display order / delivery time
+#### Display order / delivery time
 
 This feature displays the order time and delivery / pickup time on the order receipt.
 
@@ -328,7 +328,7 @@ This feature displays the order time and delivery / pickup time on the order rec
 <img src = "screenshots/features/receipt.jpg">
 </details>
 
-### Quit
+#### Quit
 
 This feature is used throughout the app to allow the user to quit the app with a thank you message.
 
@@ -437,6 +437,7 @@ PEP-8 Validation was used to validate the Python code used in the app.
 | When multiple user order in parallel, the preview function displays items being ordered by all users instead of user specific items  |  Generate unique order id for each user and then search all items for specific order id to tabulate user specific order data for preview page  |
 | When user removes an item on preview page, the leftover items are appended to the previously added items in the order list  |  Instead of using global variable for retreiving individual user data, use local variable in get individual user data function to fetch current order data for individual user | 
 | Sometimes remove item function doesn't remove the desired item on preview page. It works after 2-3 attempts | Use the findall function to find cells with specific item number & specific order ID and subsequently identify common row using sets to ensure removal of specific requested item from worksheet |
+| Project's functionality works as expected in terminal but shows error while adding item on menu page of the project when run through the Heroku link | Redeployed the project manually on Heroku after tutor support as I had made changes since last deployment on Heroku | 
 
 
 ## Deployment
@@ -501,6 +502,16 @@ I made a local clone of a repository via the following steps:
   - Type `git clone` and paste the previously copied URL. I copied HTTPS method.
   - `$ clone https://github.com/jyotiyadav2508/pizza-hub.git`
   - Now press enter and the local clone will be created at the local location.
+
+## Credits
+
+I used following resources during the project development:
+
+  - For Gspreds functions for retrieving and updating the data from and to google sheets
+    https://docs.gspread.org/en/latest/user-guide.html
+
+  - For finding common elements in two lists using sets  
+    https://www.geeksforgeeks.org/python-print-common-elements-two-lists/
 
 ## Acknowledgements
 
