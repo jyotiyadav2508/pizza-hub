@@ -48,17 +48,13 @@ The Pizza Hub website has been developed to provide users the chance to order Pi
  - Navigate the app seamlessly.
  - Receive clear instructions on their current input options.
  - Be able to add and remove items from an order prior to order confirmation.
+ - Be able to cancel the order.
  - The ability to preview their order.
  - Be able to quit the app from any page.
 
 ### Site Owner Goals
 
- - To provide customers an easy-to-use app to order pizza from The pizza Hub.
- - To provide home delivery or pickup option to the customers.
- - To provide the customer the ability to preview their orders.
- - To provide the customer to choose order confirmation or quit.
- - To provide the customer to exit any time.
- - Ensure all user inputs are validated and errors are handled to provide a good user experience.
+ - To save the user information and order data to a Google Sheets worksheet.
 
 ## User Experience
 
@@ -163,9 +159,7 @@ The following flowchart was created to help identify functions that would be req
 
 ### Data Models
 
-This project uses Object Orientated Programming to interact and manipulate the following:
-
-  - Lists - This project uses list to aid the storage of data from the Google Sheets file to variables and vice versa.
+  - Lists and Sets- This project uses lists and sets to aid the storage of data from the Google Sheets file to variables and vice versa.
 
   - Google Sheets API - Google Sheets was used in this project to store all required data outside the container.
 
@@ -416,7 +410,15 @@ PEP-8 Validation was used to validate the Python code used in the app.
 | Retrieve data | Add user details on main page | Menu is tabulated after retrieving data from worksheet 'menu' | Works as expected |
 |Append user data | Add item on menu page | User data and order data provided by the user during the order process is appended to the worksheet 'order_list' | Works as expected |
 
-3. As a site owner, I want users to receive feedback based on their input.
+3. As a site owner, I want the status of the order in Google Sheets worksheet 'order_list' is automatically updated based on user action.
+
+| Feature       | Action        | Expected Result  | Actual Result |
+| ------------- | ------------- | -------------    | ------------- |
+| Update order status  | Enter item number on menu page | User data & order data for the requested item number is appended to the worksheet 'order_list' and order status of the requested item is set to 'Processing'.| Works as expected |
+| Update order status | Enter 'C' either from preview page | In worksheet 'order_list', order status for the items of the specific order id changes to 'Confirmed'.  | Works as expected |
+| Update order status | Enter 'Q' either from menu page or preview page | In worksheet 'order_list', order status for the items of the specific order id changes to 'Cancelled'.  | Works as expected |
+
+4. As a site owner, I want users to receive feedback based on their input.
 
 | Feature       | Action        | Expected Result  | Actual Result |
 | ------------- | ------------- | -------------    | ------------- |
@@ -506,9 +508,9 @@ I made a local clone of a repository via the following steps:
 ## Acknowledgements
 
 I would like to also thank the following:
-  - My Husband for his support and help doing this project.
   - My Code Institute mentor Mr Sandeep Aggarwal for his guidance through this project.
   - My fellow Code Institute students from whom I got the project idea.
+  - My Husband for his support and help in debugging.
   - Code Institute tutor support who helped me with different issues while doing the project.
   
 

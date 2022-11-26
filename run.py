@@ -1,8 +1,18 @@
 """
-Import gspread, to access and update data in our spreadsheet and
-import credentials class from google-auth to set up the authenication
+Import gspread to access and update data in our spreadsheet
+Import credentials class from google-auth to set up the authenication
 needed to access our Google Cloud Project.
+Import os to clear screen
+Import sleep from time to delay the display of the upcoming data
+Import datetime and timedelta to show date and time in the receipt
+Import random to generate random order id
+Import pyfiglet to display the store name in art form
+Import tabulate to display menu, preview and order receipt in
+table format
+Import colored from termcolor to provide feedback to the user in colored
+text format
 """
+
 import os
 from time import sleep
 from datetime import datetime, timedelta
@@ -20,19 +30,28 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive",
 ]
 
+# To open google sheets after authentication
 CREDS = Credentials.from_service_account_file("creds.json")
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("pizza_hub")
 
+# To acces the worksheets in google sheets
 MENU = SHEET.worksheet("menu")
 ORDER_LIST = SHEET.worksheet("order_list")
 
 # Reduce the header and formatting row.
-# MAX_MENU_ITEM = len(MENU.get_all_values()) - 2
+MAX_MENU_ITEM = len(MENU.get_all_values()) - 2
 
-user_data = []
-order_data = []
+# Order receipt constants
+DELIVERY_CHARGE = 5
+DELIVERY_TIME = 30
+PICKUP_TIME = 15
+
+# Global variables
+user_data = []  # Contains user name, user order id, order type and address
+order_data = []  # Contains item number, item name, item price
+# Contains item number, item name, item price for specific user order id
 global_individual_user_data = []
 
 WELCOME_MSG = """
@@ -64,7 +83,7 @@ PREVIEW_TEXT = """
 
 def clear_screen():
     """
-    Clear the current open screen
+    Clears the console
     """
     if os.name == "posix":
         os.system("clear")
@@ -72,65 +91,69 @@ def clear_screen():
         os.system("cls")
 
 
-def tabulate_preview(user_info):
+def tabulate_data(user_info):
     """
-    Formate order preview in table form
+    Formats the data in table form
     """
-    formatted_preview = tabulate(
+    format_data = tabulate(
         user_info,
         headers=["Item", "Name", "Price"],
         tablefmt="simple",
         numalign="center",
     )
-    print(formatted_preview)
+    print(format_data)
 
 
 def get_individual_user_data():
     """
-    Get user data with unique Id
+    Get individual user's order data from worksheet
+    'order_list' with unique order Id
     """
     individual_user_data = []
     for row in ORDER_LIST.get_all_values():
         for item in row:
-            if item == str(order_data[0]):
-                row.pop(7)
-                del row[0:4]
+            if item == str(user_data[1]):
+                row.pop(7)  # to remove order status
+                del row[0:4]  # to remove user data
                 individual_user_data.append(row)
     return individual_user_data
 
 
 def display_order_receipt():
     """
-    Display receipt with user datails and order list
+    Displays order receipt with user data, order data,
+    order date & time, pickup / delivery date & time,
+    delivery charge and total price
     """
+    # Display user data
     print(colored("****Your Reciept****\n", "yellow"))
     print(f"User name: {user_data[0]}")
     print(f"Order Id: {user_data[1]}")
     print(f"Order type: {user_data[2]}")
     print(f"Address: {user_data[3]}")
+    # Display date & time for order receipt
     order_time = datetime.now()
-    delivery_time = order_time + timedelta(minutes=30)
-    pickup_time = order_time + timedelta(minutes=15)
+    delivery_time = order_time + timedelta(minutes=DELIVERY_TIME)
+    pickup_time = order_time + timedelta(minutes=PICKUP_TIME)
     order_time = order_time.strftime("%H:%M:%S  %d-%m-%Y")
     delivery_time = delivery_time.strftime("%H:%M:%S  %d-%m-%Y")
     pickup_time = pickup_time.strftime("%H:%M:%S  %d-%m-%Y")
     print(f"Order time: {order_time}\n")
-    total_price = 0
-    delivery_charge = 5
+    total_price = 0  # initialize total price
     local_user_data = get_individual_user_data()
+    # Calculating total price for order receipt
     for item in local_user_data:
         price = float(item[2].split("€")[1])
         total_price += price
         display_total_price = "€" + str(round(total_price, 2))
-
-    tabulate_preview(local_user_data)
+    tabulate_data(local_user_data)
     if user_data[2] == "Home delivery":
         print(
             colored(
-                f"\nDelivey charge: €{float(delivery_charge):.2f}", "yellow"
+                f"\nDelivey charge: €{float(DELIVERY_CHARGE):.2f}", "yellow"
             )
         )
-        display_total_price = "€" + str(total_price + delivery_charge)
+        display_total_price = "€" + str(total_price + DELIVERY_CHARGE)
         print(
             colored(
                 f"Total price of your order: {display_total_price}", "yellow"
@@ -142,7 +165,7 @@ def display_order_receipt():
                 f"\nTotal price of your order: {display_total_price}", "yellow"
             )
         )
-    if user_data[1] == "Home delivery":
+    if user_data[2] == "Home delivery":
         print(
             colored(
                 f"Your order will be delivered at {delivery_time}\n", "yellow"
@@ -168,10 +191,12 @@ def display_order_receipt():
 
 def append_order_status(order_request):
     """
-    Update order status in gspread when user confirmed his order
+    Update order status in worksheet 'order_list'
+    when user Confirms / Cancels the order
     """
-    cells_list = ORDER_LIST.findall(str(order_data[0]))
+    cells_list = ORDER_LIST.findall(str(user_data[1]))
     for cell in cells_list:
+        # Locating cell for order status corresponding to order id
         confirmation_cell = "H" + str(cell.row)
         if order_request.capitalize() == "C":
             ORDER_LIST.update(confirmation_cell, "Confirmed")
@@ -181,11 +206,11 @@ def append_order_status(order_request):
 
 def remove_item(item):
     """
-    Remove an item from user's order list on preview page
+    Removes an item from user's order list on preview page
     """
     # Find cell of selected item and specific order id in worksheet order list
     item_cell_list = ORDER_LIST.findall(str(item))
-    order_id_cell_list = ORDER_LIST.findall(str(order_data[0]))
+    order_id_cell_list = ORDER_LIST.findall(str(user_data[1]))
     # Finding row of the specific order id and store in a list
     order_id_index = []
     for order_id_cell in order_id_cell_list:
@@ -213,26 +238,27 @@ def remove_item(item):
 
 def preview_order():
     """
-    Preview user's order list
+    Previews user's order list
     """
     local_user_data = get_individual_user_data()
     i = True
     while True:
+        # Tabulate order list when function is called first time
         if i:
             print(colored("------Order Preview------\n", "yellow"))
-            tabulate_preview(local_user_data)
+            tabulate_data(local_user_data)
             print(PREVIEW_TEXT)
             i = False
         preview_option = input("Enter your choice:\n")
+        # Evaluating user input for digit and character
         if preview_option.isdigit():
             preview_option = int(preview_option)
-            if (preview_option) >= 1 and (preview_option) <= len(
-                MENU.get_all_values()
-            ):
+            # Validating user input for removing the item
+            if (preview_option) >= 1 and (preview_option) <= MAX_MENU_ITEM:
                 remove_item(preview_option)
                 local_user_data = get_individual_user_data()
                 clear_screen()
-                tabulate_preview(local_user_data)
+                tabulate_data(local_user_data)
                 print(PREVIEW_TEXT)
             else:
                 print(colored("\nInvalid item number\n", "red"))
@@ -244,6 +270,7 @@ def preview_order():
             break
         elif preview_option.capitalize() == "C":
             local_user_data = get_individual_user_data()
+            # Evaluating order list whether empty or not
             if bool(local_user_data):
                 append_order_status(preview_option)
                 print(colored("\nLoading reciept....", "green"))
@@ -265,7 +292,7 @@ def preview_order():
 
 def add_item(item_number):
     """
-    Append user's order list in google spreed sheet
+    Appends user data, order data and order status in google sheets worksheet
     """
     cell = MENU.find(str(item_number))
     order_row = user_data + MENU.row_values(cell.row) + ["Processing"]
@@ -279,11 +306,11 @@ def user_action():
     item_number = 0
     while True:
         user_choice = input("Enter your choice:\n")
+        # Evalauates whether input is digit or a character
         if user_choice.isdigit():
             user_choice = int(user_choice)
-            if user_choice >= 1 and user_choice <= (
-                len(MENU.get_all_values()) - 2
-            ):
+            # Validates and adds the item to the order list
+            if user_choice >= 1 and user_choice <= (MAX_MENU_ITEM):
                 item_number = user_choice
                 add_item(item_number)
                 print(
@@ -298,6 +325,8 @@ def user_action():
                     )
                 )
         elif user_choice.capitalize() == "P":
+            # item_number is used to display order list empty message
+            # when user enter 'P' without adding an item
             if item_number == 0:
                 print(
                     colored(
@@ -322,8 +351,8 @@ def user_action():
 
 def display_menu_list():
     """
-    Fetches pizza menu from google spreadsheet and display it
-    in formatted tabulate form to user.
+    Fetches pizza menu from google sheets worksheet 'menu' and displays it
+    in formatted table form to user.
     """
     display_menu = MENU.get_all_values()
     print(tabulate(display_menu))
@@ -333,15 +362,15 @@ def display_menu_list():
 
 def get_user_details():
     """
-    Get user details like: name and order type and
-    append it in user data list
+    Gets user details like user name, order type, address and
+    appends them in user data list along with user order Id
     """
     user_data.clear()
     user_name = input("Enter your name:\n")
     user_data.append(user_name)
+    # Generates random order id for the specific user
     user_order_id = random.getrandbits(16)
     user_data.append(user_order_id)
-    order_data.append(user_order_id)
     print(colored(f"\nWelcome {user_name}!\n", "yellow"))
     while True:
         delivery_type = input(ORDER_OPTION_MSG).capitalize()
